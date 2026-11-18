@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Database\Seeders;
 
-use RuntimeException;
-
 final class DatabaseSeeder
 {
-    public function run(): void
+    public function run(): array
     {
-        throw new RuntimeException("Database seeders are not implemented.");
+        return [
+            "sellers" => SellerSeeder::items(),
+            "products" => ProductSeeder::items(),
+            "product_sellers" => ProductSellerSeeder::items(),
+        ];
     }
 }

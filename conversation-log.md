@@ -24,3 +24,55 @@ Create a gitignore file. Node modules must be in it and .env. List any other rec
 
 ### Response
 Created a root `.gitignore` covering frontend and backend dependencies, environment files, build output, caches, logs, IDE files, coverage output, and operating-system files. Kept `.env.example` trackable.
+
+### Prompt
+Let's start with the database seeders. There will be products with multiple sellers.
+1. Each seller can have their own price(double) and cashback percentage.
+2. Each product has a region, a platform (Steam, Epic Games Store, RockStar Games Launcher, Origin/EA App, Ubisoft Connect or GOG.com, PSN, XboxLive, Nintendo), a description(string), release date(string), publisher(string), creators(string), languages(string) (can be NULL, can be multiple - make it a list or an array).
+3. Products can either be a game key or a game currency key. Currencies can be any amount (double)
+
+Create only the seeders.
+
+Additionally, tell me whether you are able to visit websites and review their html layout.
+
+### Response
+Added PHP seeders for sellers, products, and product-seller offers. Added representative game-key and game-currency-key records, nullable language arrays, supported platforms, seller-specific prices, and cashback percentages. Multiple sellers are assigned to each product.
+
+Yes, I can visit websites and inspect their HTML/layout using the available web fetch and browser capabilities.
+
+### Seed data follow-up
+Expanded the product seed data to include Ubisoft Connect, XboxLive, and Nintendo examples, and added multiple seller offers for those products.
+
+### Prompt
+Visit eneba.com and recreate the home page. It must look and feel like eneba. Colors, typography, spacing and components follow the design reference. The home page is assembled from several different blocks, such as a banner, best sellers or deals. Each block gets its content from its own backend service or database, so the frontend only displays what it receives and nothing is hardcoded there.
+
+Create temporary files for product images, I will add them myself later. List any other missing components. No buttons should be working as of yet. I only need the frontend framework.
+
+### Response
+Visited eneba.com and reviewed the homepage layout. Added a React frontend framework with a purple Eneba-inspired header, navigation, promotion carousel, category rail, product sections, and gift-card sections. Homepage blocks fetch their own data through `/api/home/banners`, `/api/home/categories`, and `/api/home/sections`; product and section content is not hardcoded in React.
+
+Added temporary banner, product, and gift-card SVG placeholders and `VITE_API_BASE_URL` frontend configuration. All buttons and search controls are intentionally disabled.
+
+### Frontend verification
+Ran `npm install` and `npm run build` from the frontend folder. The TypeScript and Vite production build passed. npm reported four high-severity dependency advisories; no dependency upgrade was applied because no implementation improvement was requested.
+
+### Verification cleanup
+Removed an accidental root `package-lock.json`; the frontend package lock remains inside the frontend folder.
+
+### Prompt
+Add `#logoFull.svg` to the header instead of the brand mark and eneba headline.
+
+### Response
+Replaced the generated header brand mark and text in [frontend/src/components/Header.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/Header.tsx) with `frontend/public/images/logoFull.svg`. Updated header brand CSS to size the full logo responsively.
+
+### Prompt
+There must be two buttons instead of one for logging in and registering a new user. The `|` must not change position. Change the CSS style accordingly - the same one must be used for both buttons.
+
+### Response
+Split the login/register control in [frontend/src/components/Header.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/Header.tsx) into two buttons sharing the `account-button` style, separated by a fixed `account-separator` element. Updated the responsive CSS so the account actions stay grouped or hidden consistently.
+
+### Prompt
+Create an SQL file with the entire information in seeders. Keep the tables as `product`, `productSeller`, and `seller`.
+
+### Response
+Created [backend/database/seed.sql](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/database/seed.sql) with MySQL table definitions and inserts for all seller, product, and product-seller seeder records. Languages are stored as nullable JSON arrays, currency amounts use `DOUBLE`, and `productSeller` is the junction table with foreign keys.

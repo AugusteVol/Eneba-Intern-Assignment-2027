@@ -1,4 +1,4 @@
-import type { Banner, Category, HomePageData, HomeSection } from "../types/home";
+import type { ApiProduct, Banner, Category, HomePageData, HomeSection } from "../types/home";
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
@@ -16,4 +16,22 @@ export async function fetchHomePage(): Promise<HomePageData> {
   ]);
 
   return { banners, categories, sections };
+}
+
+export async function fetchAllProducts(): Promise<ApiProduct[]> {
+  const response = await fetch("/api/products");
+  if (!response.ok) {
+    throw new Error("Failed to load products");
+  }
+
+  return response.json() as Promise<ApiProduct[]>;
+}
+
+export async function fetchProductById(id: number): Promise<ApiProduct> {
+  const response = await fetch(`/api/products/${id}`);
+  if (!response.ok) {
+    throw new Error(`Failed to load product ${id}`);
+  }
+
+  return response.json() as Promise<ApiProduct>;
 }

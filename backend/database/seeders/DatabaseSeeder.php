@@ -12,6 +12,7 @@ final class DatabaseSeeder
             "sellers" => SellerSeeder::items(),
             "products" => ProductSeeder::items(),
             "product_sellers" => ProductSellerSeeder::items(),
+            "accounts" => AccountSeeder::items(),
         ];
     }
 }

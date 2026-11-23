@@ -1,6 +1,22 @@
 DROP TABLE IF EXISTS productSeller;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS seller;
+DROP TABLE IF EXISTS account;
+
+CREATE TABLE account (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('admin', 'user'))
+);
+DROP TABLE IF EXISTS account;
+
+CREATE TABLE account (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('admin', 'user'))
+);
 
 CREATE TABLE seller (
     id INTEGER PRIMARY KEY,
@@ -18,7 +34,9 @@ CREATE TABLE product (
     publisher TEXT NOT NULL,
     creators TEXT NOT NULL,
     languages TEXT,
-    currency_amount REAL
+    currency_amount REAL,
+    image_url TEXT NULL
+    image_url TEXT
 );
 
 CREATE TABLE productSeller (
@@ -38,17 +56,17 @@ INSERT INTO seller (id, name) VALUES
 
 INSERT INTO product (
     id, name, kind, region, platform, description, release_date,
-    publisher, creators, languages, currency_amount
+    publisher, creators, languages, currency_amount, image_url
 ) VALUES
-    (1, 'Cyberpunk 2077', 'game_key', 'Global', 'Steam', 'An open-world action-adventure game set in Night City.', '2020-12-10', 'CD Projekt', 'CD Projekt Red', '["English","French","German","Polish"]', NULL),
-    (2, 'Fortnite', 'game_currency_key', 'Global', 'Epic Games Store', 'A digital package for Fortnite in-game currency.', '2017-07-21', 'Epic Games', 'Epic Games', NULL, 1000.0),
-    (3, 'Grand Theft Auto V', 'game_key', 'Europe', 'RockStar Games Launcher', 'An action-adventure game set in the city of Los Santos.', '2015-04-14', 'Rockstar Games', 'Rockstar North', '["English","French","Italian","German","Spanish"]', NULL),
-    (4, 'EA Sports FC 25', 'game_currency_key', 'Europe', 'Origin/EA App', 'A digital package for EA Sports FC Ultimate Team currency.', '2024-09-27', 'Electronic Arts', 'EA Vancouver', '["English","French","Spanish"]', 2800.0),
-    (5, 'The Witcher 3: Wild Hunt', 'game_key', 'Global', 'GOG.com', 'A story-driven open-world RPG.', '2015-05-18', 'CD Projekt', 'CD Projekt Red', '["English","French","German","Japanese"]', NULL),
-    (6, 'PlayStation Plus', 'game_currency_key', 'North America', 'PSN', 'A PlayStation Network wallet or membership currency package.', '2022-06-13', 'Sony Interactive Entertainment', 'Sony Interactive Entertainment', NULL, 50.0),
-    (7, 'Assassin''s Creed Valhalla', 'game_key', 'Global', 'Ubisoft Connect', 'A Viking-age open-world action RPG.', '2020-11-10', 'Ubisoft', 'Ubisoft Montreal', '["English","French","Arabic","Russian"]', NULL),
-    (8, 'Xbox Gift Card', 'game_currency_key', 'United States', 'XboxLive', 'A digital gift card for the Xbox and Microsoft store.', '2013-09-12', 'Microsoft', 'Microsoft', NULL, 25.75),
-    (9, 'The Legend of Zelda: Tears of the Kingdom', 'game_key', 'Japan', 'Nintendo', 'An open-world adventure set across the lands and skies of Hyrule.', '2023-05-12', 'Nintendo', 'Nintendo', '["English","Japanese","French","German"]', NULL);
+    (1, 'Cyberpunk 2077', 'game_key', 'Global', 'Steam', 'An open-world action-adventure game set in Night City.', '2020-12-10', 'CD Projekt', 'CD Projekt Red', '["English","French","German","Polish"]', NULL, '/images/products/cyberpunk-2077.jpg'),
+    (2, 'Fortnite', 'game_currency_key', 'Global', 'Epic Games Store', 'A digital package for Fortnite in-game currency.', '2017-07-21', 'Epic Games', 'Epic Games', NULL, 1000.0, '/images/products/fortnite.jpg'),
+    (3, 'Grand Theft Auto V', 'game_key', 'Europe', 'RockStar Games Launcher', 'An action-adventure game set in the city of Los Santos.', '2015-04-14', 'Rockstar Games', 'Rockstar North', '["English","French","Italian","German","Spanish"]', NULL, '/images/products/grand-theft-auto-v.jpg'),
+    (4, 'EA Sports FC 25', 'game_currency_key', 'Europe', 'Origin/EA App', 'A digital package for EA Sports FC Ultimate Team currency.', '2024-09-27', 'Electronic Arts', 'EA Vancouver', '["English","French","Spanish"]', 2800.0, '/images/products/ea-sports-fc-25.jpg'),
+    (5, 'The Witcher 3: Wild Hunt', 'game_key', 'Global', 'GOG.com', 'A story-driven open-world RPG.', '2015-05-18', 'CD Projekt', 'CD Projekt Red', '["English","French","German","Japanese"]', NULL, '/images/products/the-witcher-3-wild-hunt.jpg'),
+    (6, 'PlayStation Plus', 'game_currency_key', 'North America', 'PSN', 'A PlayStation Network wallet or membership currency package.', '2022-06-13', 'Sony Interactive Entertainment', 'Sony Interactive Entertainment', NULL, 50.0, '/images/products/playstation-plus.jpg'),
+    (7, 'Assassin''s Creed Valhalla', 'game_key', 'Global', 'Ubisoft Connect', 'A Viking-age open-world action RPG.', '2020-11-10', 'Ubisoft', 'Ubisoft Montreal', '["English","French","Arabic","Russian"]', NULL, '/images/products/assassins-creed-valhalla.jpg'),
+    (8, 'Xbox Gift Card', 'game_currency_key', 'United States', 'XboxLive', 'A digital gift card for the Xbox and Microsoft store.', '2013-09-12', 'Microsoft', 'Microsoft', NULL, 25.75, '/images/products/xbox-gift-card.jpg'),
+    (9, 'The Legend of Zelda: Tears of the Kingdom', 'game_key', 'Japan', 'Nintendo', 'An open-world adventure set across the lands and skies of Hyrule.', '2023-05-12', 'Nintendo', 'Nintendo', '["English","Japanese","French","German"]', NULL, '/images/products/the-legend-of-zelda-tears-of-the-kingdom.jpg');
 
 INSERT INTO productSeller (product_id, seller_id, price, cashback_percentage) VALUES
     (1, 1, 29.99, 4.5),

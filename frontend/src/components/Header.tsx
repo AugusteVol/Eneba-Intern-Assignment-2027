@@ -14,14 +14,14 @@ export function Header() {
             <span aria-hidden="true">🇪🇺</span><span>English EU | EUR</span>
           </button>
           <button className="icon-button" type="button" aria-label="Favorites">♡</button>
-          <button className="icon-button" type="button" aria-label="Cart">♧</button>
+          <button className="icon-button" type="button" aria-label="Cart">🛒</button>
           <div className="account-actions">
-            <button className="account-button" type="button">
+            <button className="account-button" type="button" aria-label="Log in">
               <span className="account-icon" aria-hidden="true">●</span>
               <span>Log in</span>
             </button>
             <span className="account-separator" aria-hidden="true">|</span>
-            <button className="account-button" type="button">Register</button>
+            <button className="account-button" type="button" aria-label="Register">Register</button>
           </div>
         </div>
       </div>

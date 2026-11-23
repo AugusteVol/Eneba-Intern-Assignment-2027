@@ -5,10 +5,12 @@ declare(strict_types=1);
 require_once __DIR__ . "/seeders/SellerSeeder.php";
 require_once __DIR__ . "/seeders/ProductSeeder.php";
 require_once __DIR__ . "/seeders/ProductSellerSeeder.php";
+require_once __DIR__ . "/seeders/AccountSeeder.php";
 
 use App\Database\Seeders\SellerSeeder;
 use App\Database\Seeders\ProductSeeder;
 use App\Database\Seeders\ProductSellerSeeder;
+use App\Database\Seeders\AccountSeeder;
 
 $databaseFile = __DIR__ . "/database.sqlite";
 
@@ -21,6 +23,13 @@ $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $database->exec("PRAGMA foreign_keys = ON");
 
 $database->exec("
+    CREATE TABLE account (
+        id INTEGER PRIMARY KEY,
+        username TEXT NOT NULL UNIQUE,
+        password_hash TEXT NOT NULL,
+        role TEXT NOT NULL CHECK (role IN ('admin', 'user'))
+    );
+
     CREATE TABLE seller (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL
@@ -37,7 +46,8 @@ $database->exec("
         publisher TEXT NOT NULL,
         creators TEXT NOT NULL,
         languages TEXT,
-        currency_amount REAL
+        currency_amount REAL,
+        image_url TEXT NULL
     );
 
     CREATE TABLE productSeller (
@@ -64,10 +74,11 @@ foreach (SellerSeeder::items() as $seller) {
 $productStatement = $database->prepare(
     "INSERT INTO product (
         id, name, kind, region, platform, description,
-        release_date, publisher, creators, languages, currency_amount
+        release_date, publisher, creators, languages, currency_amount, image_url
     ) VALUES (
         :id, :name, :kind, :region, :platform, :description,
         :release_date, :publisher, :creators, :languages, :currency_amount
+        , :image_url
     )",
 );
 foreach (ProductSeeder::items() as $product) {
@@ -85,6 +96,7 @@ foreach (ProductSeeder::items() as $product) {
             ? null
             : json_encode($product["languages"], JSON_UNESCAPED_UNICODE),
         "currency_amount" => $product["currency_amount"],
+        "image_url" => $product["image_url"],
     ]);
 }
 
@@ -101,5 +113,18 @@ foreach (ProductSellerSeeder::items() as $offer) {
         "seller_id" => $offer["seller_id"],
         "price" => $offer["price"],
         "cashback_percentage" => $offer["cashback_percentage"],
+    ]);
+}
+
+$accountStatement = $database->prepare(
+    "INSERT INTO account (id, username, password_hash, role)
+     VALUES (:id, :username, :password_hash, :role)",
+);
+foreach (AccountSeeder::items() as $account) {
+    $accountStatement->execute([
+        "id" => $account["id"],
+        "username" => $account["username"],
+        "password_hash" => $account["password_hash"],
+        "role" => $account["role"],
     ]);
 }

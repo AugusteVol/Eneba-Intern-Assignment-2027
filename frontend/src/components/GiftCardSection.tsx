@@ -1,4 +1,4 @@
-import type { HomeSection } from "../types/home";
+/*import type { HomeSection } from "../types/home";
 
 interface GiftCardSectionProps {
   section: HomeSection;
@@ -29,4 +29,4 @@ export function GiftCardSection({ section, loading }: GiftCardSectionProps) {
       )}
     </section>
   );
-}
+}*/

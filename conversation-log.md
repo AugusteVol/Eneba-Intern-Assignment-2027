@@ -94,3 +94,41 @@ Make the menu, Categories, Cheap Games, Software, eGift Cards, and Eneba Gift Ca
 
 ### Response
 Enabled the header navigation buttons and gave menu and text navigation controls Eneba-style light up hover, active, and keyboard-focus backgrounds. No navigation URLs or click handlers were added.
+
+### Prompt
+Implement get all products endpoint for the ProductSection component. It should load each time the page loads.
+
+### Response
+Updated `ProductSection` to fetch `GET /api/products` on mount through `fetchAllProducts`, with loading, empty, and error states. Added the `ApiProduct` frontend type and `/api` proxy configuration for the standalone PHP server. Verified the backend returned all nine seeded products successfully.
+
+### Prompt
+Implement the banner carousel. Each banner will use a product's photo (placeholders for now), with four total banners, and each banner must use the GET product endpoint.
+
+### Response
+Updated `BannerCarousel` to fetch products 1 through 4 through `GET /api/products/{id}` on mount. It renders four placeholder banner cards using product names as labels. Added `fetchProductById` to the frontend API service and updated the banner grid layout.
+
+### Prompt
+Implement GET account and CREATE account endpoints in the backend.
+
+### Response
+Added `AccountRepository` and REST routes for `GET /accounts`, `GET /accounts/{id}`, and `POST /accounts`. Account responses exclude password hashes. POST validates username, password, and `admin`/`user` role, returns `201` for creation, `400` for invalid input, `409` for duplicate usernames, and `404` for missing accounts. Verified GET and POST through the standalone PHP server, then removed the temporary test account.
+
+### Prompt
+Add image URLs to `ProductSeeder.php` and explain where the images are pulled from.
+
+### Response
+Added `image_url` to every product and to the SQLite product table and seeder. URLs use frontend-served paths such as `/images/products/cyberpunk-2077.jpg`. The corresponding files should be placed in [frontend/public/images/products/](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/public/images/products). `ProductRepository` now returns `imageUrl` and uses `/images/product-placeholder.svg` if no URL exists. Product and banner components use the returned URL.
+
+### Prompt
+Center the header and make the log in and register buttons interactable.
+
+### Response
+Centered the header containers with a fixed maximum width and explicit horizontal margins. Added Eneba-style purple hover, active, and keyboard-focus states to both account buttons while preserving the fixed separator.
+
+### Prompt
+The banner should extend throughout the entire screen length-wise, not be centered in the middle.
+
+### Response
+Changed [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css) so `.banner-section` uses the full viewport width and is no longer covered by the shared centered container width.
+
+

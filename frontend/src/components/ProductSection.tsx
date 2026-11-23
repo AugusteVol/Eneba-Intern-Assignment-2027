@@ -1,36 +1,67 @@
-import type { HomeSection } from "../types/home";
+import { useEffect, useState } from "react";
+import { fetchAllProducts } from "../services/homeApi";
+import type { ApiProduct } from "../types/home";
 
-interface ProductSectionProps {
-  section: HomeSection;
-  loading: boolean;
-}
+export function ProductSection() {
+  const [products, setProducts] = useState<ApiProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-export function ProductSection({ section, loading }: ProductSectionProps) {
+  useEffect(() => {
+    let active = true;
+
+    fetchAllProducts()
+      .then((items) => {
+        if (active) setProducts(items);
+      })
+      .catch((requestError: unknown) => {
+        if (active) {
+          setError(
+            requestError instanceof Error
+              ? requestError.message
+              : "Failed to load products",
+          );
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <section className="content-section">
       <div className="section-heading">
-        <h2>{loading ? "" : section.title}</h2>
-        {!loading && section.showAllUrl ? <button type="button">Show all</button> : null}
+        <h2>{loading ? "" : "Most popular products"}</h2>
       </div>
       {loading ? (
         <div className="product-grid">
           {Array.from({ length: 6 }).map((_, index) => <div className="product-card-skeleton" key={index} />)}
         </div>
+      ) : error ? (
+        <p role="alert">{error}</p>
+      ) : products.length === 0 ? (
+        <p>No products available.</p>
       ) : (
         <div className="product-grid">
-          {section.items.map((product) => (
+          {products.map((product) => (
             <button className="product-card" type="button" key={product.id}>
               <div className="product-image-wrap">
-                <img src={product.imageUrl} alt="" onError={(event) => {
+                <img src={product.imageUrl} alt={product.name} onError={(event) => {
                   event.currentTarget.src = "/images/product-placeholder.svg";
                 }} />
                 {product.cashbackPercentage ? <span className="cashback">Cashback {product.cashbackPercentage}%</span> : null}
               </div>
               <div className="product-details">
                 <span className="product-region">{[product.region, product.platform].filter(Boolean).join(" · ")}</span>
-                <strong>{product.title}</strong>
-                {product.sellerName ? <span className="seller-name">{product.sellerName}</span> : null}
-                <div className="price-row"><span>From</span><strong>€ {product.price.toFixed(2)}</strong></div>
+                <strong>{product.name}</strong>
+                <div className="price-row">
+                  <span>From</span>
+                  <strong>{product.price === null ? "Unavailable" : `€ ${product.price.toFixed(2)}`}</strong>
+                </div>
               </div>
             </button>
           ))}

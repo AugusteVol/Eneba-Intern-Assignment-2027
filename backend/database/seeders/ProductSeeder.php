@@ -21,6 +21,7 @@ final class ProductSeeder
                 "creators" => "CD Projekt Red",
                 "languages" => ["English", "French", "German", "Polish"],
                 "currency_amount" => null,
+                "image_url" => "/images/products/Cyberpunk.jpg",
             ],
             [
                 "id" => 2,
@@ -34,6 +35,7 @@ final class ProductSeeder
                 "creators" => "Epic Games",
                 "languages" => null,
                 "currency_amount" => 1000.0,
+                "image_url" => "/images/products/fortnite.jpg",
             ],
             [
                 "id" => 3,
@@ -47,6 +49,7 @@ final class ProductSeeder
                 "creators" => "Rockstar North",
                 "languages" => ["English", "French", "Italian", "German", "Spanish"],
                 "currency_amount" => null,
+                "image_url" => "/images/products/gta5.jpeg",
             ],
             [
                 "id" => 4,
@@ -60,6 +63,7 @@ final class ProductSeeder
                 "creators" => "EA Vancouver",
                 "languages" => ["English", "French", "Spanish"],
                 "currency_amount" => 2800.0,
+                "image_url" => "/images/products/easports.jpg",
             ],
             [
                 "id" => 5,
@@ -73,6 +77,7 @@ final class ProductSeeder
                 "creators" => "CD Projekt Red",
                 "languages" => ["English", "French", "German", "Japanese"],
                 "currency_amount" => null,
+                "image_url" => "/images/products/w.jpg",
             ],
             [
                 "id" => 6,
@@ -86,6 +91,7 @@ final class ProductSeeder
                 "creators" => "Sony Interactive Entertainment",
                 "languages" => null,
                 "currency_amount" => 50.0,
+                "image_url" => "/images/products/psplus.png",
             ],
             [
                 "id" => 7,
@@ -99,6 +105,7 @@ final class ProductSeeder
                 "creators" => "Ubisoft Montreal",
                 "languages" => ["English", "French", "Arabic", "Russian"],
                 "currency_amount" => null,
+                "image_url" => "/images/products/valhalla.jpg",
             ],
             [
                 "id" => 8,
@@ -112,6 +119,7 @@ final class ProductSeeder
                 "creators" => "Microsoft",
                 "languages" => null,
                 "currency_amount" => 25.75,
+                "image_url" => "/images/products/XboxGC.jpg",
             ],
             [
                 "id" => 9,
@@ -125,6 +133,49 @@ final class ProductSeeder
                 "creators" => "Nintendo",
                 "languages" => ["English", "Japanese", "French", "German"],
                 "currency_amount" => null,
+                "image_url" => "/images/products/Zelda.jpg",
+            ],
+            [
+                "id" => 10,
+                "name" => "Steam Gift Card",
+                "kind" => "game_currency_key",
+                "region" => "Global",
+                "platform" => "Steam",
+                "description" => "A digital gift card for adding wallet funds to a Steam account.",
+                "release_date" => "2008-09-01",
+                "publisher" => "Valve",
+                "creators" => "Valve",
+                "languages" => null,
+                "currency_amount" => 50,
+                "image_url" => "/images/products/steamgift.jpg",
+            ],
+            [
+                "id" => 11,
+                "name" => "Minecraft",
+                "kind" => "game_key",
+                "region" => "Global",
+                "platform" => "PC",
+                "description" => "A sandbox survival and building game set in an open, blocky world where players explore, craft, and create.",
+                "release_date" => "2011-11-18",
+                "publisher" => "Mojang Studios",
+                "creators" => "Mojang Studios",
+                "languages" => ["English", "Japanese", "French", "German", "Spanish"],
+                "currency_amount" => null,
+                "image_url" => "/images/products/minecraft.jpg",
+            ],
+            [
+                "id" => 12,
+                "name" => "GTA VI",
+                "kind" => "game_key",
+                "region" => "Global",
+                "platform" => "PlayStation 5",
+                "description" => "An open-world action-adventure game set in the state of Leonida, centered on Vice City, following Jason and Lucia.",
+                "release_date" => "2026-11-19",
+                "publisher" => "Rockstar Games",
+                "creators" => "Rockstar Games",
+                "languages" => ["English", "French", "Italian", "German", "Spanish"],
+                "currency_amount" => null,
+                "image_url" => "/images/products/gta6.jpg",
             ],
         ];
     }

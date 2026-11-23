@@ -27,6 +27,7 @@ final class ProductRepository
                 p.creators,
                 p.languages,
                 p.currency_amount,
+                p.image_url,
                 MIN(ps.price) AS price,
                 (
                     SELECT ps2.cashback_percentage
@@ -63,7 +64,8 @@ final class ProductRepository
                 publisher,
                 creators,
                 languages,
-                currency_amount
+                currency_amount,
+                image_url
              FROM product
              WHERE id = :id",
         );
@@ -124,6 +126,7 @@ final class ProductRepository
             "currencyAmount" => $product["currency_amount"] === null
                 ? null
                 : (float) $product["currency_amount"],
+            "imageUrl" => $product["image_url"] ?? "/images/product-placeholder.svg",
         ];
 
         if (array_key_exists("price", $product)) {

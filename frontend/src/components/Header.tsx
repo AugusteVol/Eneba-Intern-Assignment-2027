@@ -26,12 +26,11 @@ export function Header() {
         </div>
       </div>
       <nav className="header-nav" aria-label="Main navigation">
-        <button type="button" aria-label="Open categories">☰</button>
-        <button type="button">Categories</button>
-        <button type="button">Cheap Games</button>
-        <button type="button">Software</button>
-        <button type="button">eGift Cards</button>
-        <button type="button">Eneba Gift Cards</button>
+        <button className="nav-text-button" type="button">☰ Categories</button>
+        <button className="nav-text-button" type="button">Cheap Games</button>
+        <button className="nav-text-button" type="button">Software</button>
+        <button className="nav-text-button" type="button">eGift Cards</button>
+        <button className="nav-text-button" type="button">Eneba Gift Cards</button>
       </nav>
     </header>
   );

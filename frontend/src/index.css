@@ -189,13 +189,30 @@ button {
 
 .header-nav button {
   flex: 0 0 auto;
-  padding: 0;
   font-size: 15px;
   font-weight: 600;
+  cursor: pointer;
 }
 
-.header-nav button:first-child {
+.header-nav .nav-menu-button {
   font-size: 23px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 4px;
+}
+
+.header-nav .nav-text-button {
+  height: 42px;
+  padding: 0 10px;
+  border-radius: 4px;
+}
+
+.header-nav button:hover,
+.header-nav button:active,
+.header-nav button:focus-visible {
+  background: #6536c5;
+  outline: none;
 }
 
 .banner-section {

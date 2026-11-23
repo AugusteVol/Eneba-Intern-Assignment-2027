@@ -76,3 +76,21 @@ Create an SQL file with the entire information in seeders. Keep the tables as `p
 
 ### Response
 Created [backend/database/seed.sql](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/database/seed.sql) with MySQL table definitions and inserts for all seller, product, and product-seller seeder records. Languages are stored as nullable JSON arrays, currency amounts use `DOUBLE`, and `productSeller` is the junction table with foreign keys.
+
+### Prompt
+Implement GET product and GET all products endpoints in the backend (REST). No changes to the frontend may be made for now.
+
+### Response
+Added SQLite-backed REST routing in [backend/public/index.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/public/index.php), a PDO SQLite connection in [backend/src/Database.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/src/Database.php), and product queries in [backend/src/ProductRepository.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/src/ProductRepository.php). Added GET `/products` and GET `/products/{id}`. Created and seeded [backend/database/database.sqlite](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/database/database.sqlite) using Python built-in SQLite support: 3 sellers, 9 products, and 19 product-seller offers. No frontend files were changed.
+
+### Prompt
+Implement GET Seller and GET all sellers. Add a method to get all sellers for one specific product additionally.
+
+### Response
+Added `SellerRepository` with `findAll`, `findById`, and `findAllByProductId`. Added REST routes for `GET /sellers`, `GET /sellers/{id}`, and `GET /products/{id}/sellers`. The product-specific seller response includes offer price and cashback percentage.
+
+### Prompt
+Make the menu, Categories, Cheap Games, Software, eGift Cards, and Eneba Gift Cards buttons interactable. They should not navigate to another page and should light up on hover.
+
+### Response
+Enabled the header navigation buttons and gave menu and text navigation controls Eneba-style light up hover, active, and keyboard-focus backgrounds. No navigation URLs or click handlers were added.

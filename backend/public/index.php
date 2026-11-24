@@ -8,6 +8,7 @@ require_once dirname(__DIR__) . "/src/SellerRepository.php";
 require_once dirname(__DIR__) . "/src/AccountRepository.php";
 require_once dirname(__DIR__) . "/src/CartRepository.php";
 require_once dirname(__DIR__) . "/src/BannerRepository.php";
+require_once dirname(__DIR__) . "/src/KeyRepository.php";
 
 use App\Database;
 use App\ProductRepository;
@@ -15,6 +16,7 @@ use App\SellerRepository;
 use App\AccountRepository;
 use App\CartRepository;
 use App\BannerRepository;
+use App\KeyRepository;
 
 header("Content-Type: application/json");
 
@@ -29,6 +31,7 @@ try {
     $accountRepository = new AccountRepository($database);
     $bannerRepository = new BannerRepository($database);
     $cartRepository = new CartRepository($database);
+    $keyRepository = new KeyRepository($database);
 
     if ($method === "POST" && $path === "/login") {
         $body = json_decode((string) file_get_contents("php://input"), true);
@@ -259,6 +262,23 @@ try {
 
         http_response_code(200);
         echo json_encode($account, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if ($method === "GET" && preg_match('#^/accounts/([1-9][0-9]*)/keys$#', $path, $matches)) {
+        $accountId = (int) $matches[1];
+
+        if ($accountRepository->findById($accountId) === null) {
+            http_response_code(404);
+            echo json_encode(["error" => "Account not found"]);
+            exit;
+        }
+
+        http_response_code(200);
+        echo json_encode(
+            $keyRepository->findByAccountId($accountId),
+            JSON_UNESCAPED_UNICODE,
+        );
         exit;
     }
 

@@ -88,6 +88,23 @@ $database->exec("
         product_id INTEGER NOT NULL,
         FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
     );
+    CREATE TABLE purchaseOrder (
+        id INTEGER PRIMARY KEY,
+        account_id INTEGER NOT NULL,
+        total REAL NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE purchaseKey (
+        id INTEGER PRIMARY KEY,
+        order_id INTEGER NOT NULL,
+        product_id INTEGER NOT NULL,
+        unit_price REAL NOT NULL,
+        key_value TEXT NOT NULL UNIQUE,
+        FOREIGN KEY (order_id) REFERENCES purchaseOrder(id) ON DELETE CASCADE,
+        FOREIGN KEY (product_id) REFERENCES product(id)
+    );
 ");
 
 $sellerStatement = $database->prepare(

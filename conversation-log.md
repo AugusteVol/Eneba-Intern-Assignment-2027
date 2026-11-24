@@ -295,3 +295,16 @@ Clicking `Checkout` opens a modal "Processing payment" window with a spinner for
 Entry points: the cart's `Proceed to checkout` button now goes to `/payment`, and the product page's `Buy now` button goes to `/payment?productId={id}&sellerId={offerId}`. PaymentPage loads its order summary from the cart or from the selected product/offer accordingly. It shows a log-in prompt for signed-out visitors and an empty state if there is nothing to purchase.
 
 `frontend/src/App.tsx` now parses and renders `/payment` and `/key`. `frontend/src/pages/KeyPage.tsx` was not modified. Payment styles were added to `frontend/src/index.css`, including the provider list, order summary, two-column layout that becomes one column below 1024px, and the processing overlay.
+
+### Prompt
+Recreate this page in #KeyPage.tsx only visually.
+
+1. The product visualised in the photo will be an actual product, for now use the placeholders.
+2. The header
+3. All product types will be keys.
+4. Keep it in english. Ignore the "45 points to the balance" section - it will not exist in this app.
+5. The seller will be the actual seller. Do not implement this yet, make only frontend changes.
+
+### Response (P.S. the agent was interrupted. Manual log)
+
+Only the frontend was created for `/pages/KeyPage.tsx`. No changes have been made for backend.

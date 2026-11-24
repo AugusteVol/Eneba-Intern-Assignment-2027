@@ -5,23 +5,57 @@ interface CategoryRailProps {
   loading: boolean;
 }
 
-export function CategoryRail({ categories, loading }: CategoryRailProps) {
+export function CategoryRail({ loading }: CategoryRailProps) {
   return (
     <section className="category-section" aria-label="Categories">
       {loading ? (
-        <div className="category-skeletons">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div className="category-skeleton" key={index} />
-          ))}
-        </div>
+        <div className="category-skeleton" />
       ) : (
-        <div className="category-track">
-          {categories.map((category) => (
-            <button className="category-card" type="button" disabled key={category.id}>
-              {category.iconUrl ? <img src={category.iconUrl} alt="" /> : <span className="category-icon-placeholder" />}
-              <span>{category.name}</span>
-            </button>
-          ))}
+        <div className="games-menu">
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Games</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Game Cards</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>eGift Cards</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>E-money</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Steam</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Steam Gift</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>PSN</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Xbox</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>FIFA</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Fortnite</span>
+          </button>
+          <button className="category-card" type="button">
+            <span className="category-icon-placeholder games-icon" aria-hidden="true">+</span>
+            <span>Amazon</span>
+          </button>
         </div>
       )}
     </section>

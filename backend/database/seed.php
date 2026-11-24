@@ -6,11 +6,13 @@ require_once __DIR__ . "/seeders/SellerSeeder.php";
 require_once __DIR__ . "/seeders/ProductSeeder.php";
 require_once __DIR__ . "/seeders/ProductSellerSeeder.php";
 require_once __DIR__ . "/seeders/AccountSeeder.php";
+require_once __DIR__ . "/seeders/BannerSeeder.php";
 
 use App\Database\Seeders\SellerSeeder;
 use App\Database\Seeders\ProductSeeder;
 use App\Database\Seeders\ProductSellerSeeder;
 use App\Database\Seeders\AccountSeeder;
+use App\Database\Seeders\BannerSeeder;
 
 $databaseFile = __DIR__ . "/database.sqlite";
 
@@ -59,6 +61,33 @@ $database->exec("
         FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
         FOREIGN KEY (seller_id) REFERENCES seller(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE cart (
+        id INTEGER PRIMARY KEY,
+        account_id INTEGER NOT NULL UNIQUE,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE cartItem (
+        id INTEGER PRIMARY KEY,
+        cart_id INTEGER NOT NULL,
+        product_id INTEGER NOT NULL,
+        seller_id INTEGER NOT NULL,
+        quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+        added_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (cart_id, product_id, seller_id),
+        FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE,
+        FOREIGN KEY (product_id, seller_id)
+            REFERENCES productSeller(product_id, seller_id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE banner (
+        id INTEGER PRIMARY KEY,
+        product_id INTEGER NOT NULL,
+        FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+    );
 ");
 
 $sellerStatement = $database->prepare(
@@ -97,6 +126,16 @@ foreach (ProductSeeder::items() as $product) {
             : json_encode($product["languages"], JSON_UNESCAPED_UNICODE),
         "currency_amount" => $product["currency_amount"],
         "image_url" => $product["image_url"],
+    ]);
+}
+
+$bannerStatement = $database->prepare(
+    "INSERT INTO banner (id, product_id) VALUES (:id, :product_id)",
+);
+foreach (BannerSeeder::items() as $banner) {
+    $bannerStatement->execute([
+        "id" => $banner["id"],
+        "product_id" => $banner["product_id"],
     ]);
 }
 

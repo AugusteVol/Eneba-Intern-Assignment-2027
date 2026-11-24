@@ -25,7 +25,6 @@ input {
 
 button {
   border: 0;
-  cursor: default;
 }
 
 .app {
@@ -62,6 +61,7 @@ button {
   flex: 0 0 auto;
   padding: 0;
   background: transparent;
+  cursor: default;
 }
 
 .brand img {
@@ -116,6 +116,26 @@ button {
   color: #c8bfe8;
 }
 
+.search-submit {
+  height: 36px;
+  flex: 0 0 auto;
+  padding: 0 14px;
+  border-radius: 4px;
+  color: #35178f;
+  background: #ffdd00;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.search-submit:hover,
+.search-submit:active,
+.search-submit:focus-visible {
+  background: #ffe85a;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
 .header-actions {
   display: flex;
   align-items: center;
@@ -154,6 +174,34 @@ button {
   gap: 8px;
 }
 
+.account-menu {
+  position: relative;
+}
+
+.logout-button {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 20;
+  min-width: 140px;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  color: #fff;
+  background: #35178f;
+  box-shadow: 0 10px 24px rgba(20, 8, 62, 0.35);
+  text-align: left;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.logout-button:hover,
+.logout-button:focus-visible {
+  background: #6536c5;
+  outline: none;
+}
+
 .account-button {
   display: flex;
   align-items: center;
@@ -173,6 +221,15 @@ button {
   outline: none;
 }
 
+.account-username {
+  max-width: 180px;
+}
+
+.account-username > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .account-separator {
   color: #fff;
   font-size: 14px;
@@ -190,11 +247,16 @@ button {
 }
 
 .header-nav {
+  width: 100%;
+  max-width: none;
   height: 62px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: 23px;
+  margin: 0;
+  padding: 0 max(24px, calc((100vw - 1240px) / 2));
+  background: #28116b;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -225,6 +287,7 @@ button {
 .header-nav button:focus-visible {
   background: #6536c5;
   outline: none;
+  color: yellow;
 }
 
 .banner-section {
@@ -284,9 +347,16 @@ button {
   gap: 12px;
 }
 
+.games-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .category-card {
   min-width: 0;
   height: 112px;
+  width: 112px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -295,8 +365,17 @@ button {
   color: #fff;
   background: transparent;
   border: 1px solid transparent;
+  border-radius: 4px;
   font-size: 12px;
   font-weight: 700;
+  cursor: pointer;
+}
+
+.category-card:hover,
+.category-card:active,
+.category-card:focus-visible {
+  background: #6536c5;
+  outline: none;
 }
 
 .category-card img,
@@ -307,6 +386,15 @@ button {
   background: rgba(255, 255, 255, 0.1);
 }
 
+.games-icon {
+  display: grid;
+  place-items: center;
+  border: 2px solid #fff;
+  background: transparent;
+  font-size: 30px;
+  font-weight: 400;
+}
+
 .category-skeleton {
   height: 112px;
   border-radius: 4px;
@@ -314,6 +402,428 @@ button {
 
 .content-section {
   padding: 0 0 42px;
+}
+
+.cheap-games-page {
+  width: min(1240px, calc(100% - 48px));
+  margin-inline: auto;
+  padding: 32px 0 48px;
+}
+
+.cheap-games-page h1 {
+  margin: 0 0 18px;
+  font-size: 32px;
+}
+
+.search-results-page {
+  width: min(1240px, calc(100% - 48px));
+  margin-inline: auto;
+  padding: 32px 0 48px;
+}
+
+.search-results-page .section-heading h1 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.product-detail-page {
+  width: min(1240px, calc(100% - 48px));
+  margin-inline: auto;
+  padding: 32px 0 48px;
+}
+
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.product-detail-cover {
+  width: 300px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #20164f;
+}
+
+.product-detail-cover img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.product-detail-content h1 {
+  margin: 0 0 20px;
+  font-size: 36px;
+  line-height: 1.1;
+}
+
+.product-detail-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 250px));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.product-detail-meta > div {
+  min-height: 74px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-content: center;
+  gap: 6px 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.meta-label {
+  grid-column: 1 / -1;
+  color: #bbb0dc;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.region-check {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #31d07f;
+  border-radius: 50%;
+  color: #31d07f;
+  font-weight: 800;
+}
+
+.product-description,
+.product-languages,
+.product-other-info {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.product-description h2,
+.product-languages h2,
+.product-other-info h2 {
+  margin: 0 0 12px;
+  font-size: 20px;
+}
+
+.product-description p {
+  margin: 0;
+  color: #ddd7ef;
+  line-height: 1.6;
+}
+
+.product-languages ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.product-languages li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+}
+
+.product-languages li span {
+  color: #31d07f;
+  font-weight: 800;
+}
+
+.product-other-info dl {
+  margin: 0;
+}
+
+.product-other-info dl div {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.product-other-info dt {
+  color: #bbb0dc;
+}
+
+.product-other-info dd {
+  margin: 0;
+}
+
+.product-detail-skeleton {
+  height: 520px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.other-sellers {
+  width: 100%;
+  margin: 32px 0 0;
+}
+
+.other-sellers-heading {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.other-sellers-heading h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.other-sellers-heading > span {
+  color: #bbb0dc;
+  font-size: 12px;
+}
+
+.seller-offers {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.seller-offer {
+  min-height: 72px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.seller-offer:last-child {
+  border-bottom: 0;
+}
+
+.seller-offer-name,
+.seller-offer-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.seller-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #6536c5;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.seller-offer-price {
+  justify-content: flex-end;
+}
+
+.seller-offer-price strong {
+  font-size: 20px;
+}
+
+.seller-cashback {
+  padding: 5px 7px;
+  border-radius: 3px;
+  color: #fff;
+  background: #1aa64a;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.other-sellers-empty {
+  margin: 0;
+  color: #bbb0dc;
+}
+
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(300px, 520px) 300px;
+  align-items: center;
+  justify-content: center;
+  gap: 72px;
+  padding: 48px 24px;
+  background:
+    radial-gradient(circle at 20% 40%, rgba(101, 54, 197, 0.24), transparent 30%),
+    #35178f;
+}
+
+.login-promo {
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-brand {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  width: 126px;
+  height: auto;
+}
+
+.login-promo h1 {
+  margin: 0;
+  font-size: clamp(58px, 8vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -4px;
+}
+
+.login-card {
+  width: 300px;
+  min-height: 360px;
+  padding: 32px 28px;
+  border-radius: 4px;
+  background: #461e96;
+  box-shadow: 0 18px 50px rgba(20, 8, 62, 0.25);
+}
+
+.login-card-heading h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.login-card-heading p {
+  margin: 0 0 24px;
+  color: #ddd7ef;
+  font-size: 13px;
+}
+
+.login-card-heading p button {
+  padding: 0;
+  color: #ffdd00;
+  background: transparent;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-form label {
+  color: #ddd7ef;
+  font-size: 12px;
+}
+
+.login-form input {
+  height: 48px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 3px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+.login-form input:focus {
+  border-color: #ffdd00;
+}
+
+.login-submit {
+  height: 46px;
+  margin-top: 8px;
+  border-radius: 3px;
+  color: #35178f;
+  background: #ffdd00;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.login-submit:hover,
+.login-submit:focus-visible {
+  background: #ffe85a;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.login-error,
+.login-success {
+  margin: 2px 0 0;
+  font-size: 12px;
+}
+
+.login-error {
+  color: #ff9da8;
+}
+
+.login-success {
+  color: #7ef4c3;
+}
+
+@media (max-width: 760px) {
+  .login-page {
+    min-height: 100vh;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 96px 24px 48px;
+  }
+
+  .login-promo {
+    min-height: 220px;
+  }
+
+  .login-promo h1 {
+    font-size: 48px;
+  }
+
+  .login-card {
+    width: min(300px, 100%);
+  }
+
+  .product-detail-page {
+    width: min(100% - 32px, 1240px);
+  }
+
+  .product-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-detail-cover {
+    width: min(300px, 100%);
+  }
+
+  .product-detail-content h1 {
+    font-size: 28px;
+  }
+
+  .product-detail-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .seller-offer {
+    grid-template-columns: 1fr;
+  }
+
+  .seller-offer-price {
+    justify-content: flex-start;
+  }
+
+  .product-other-info dl div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 .section-heading {
@@ -453,10 +963,13 @@ button {
 
 @media (max-width: 980px) {
   .header-main,
-  .header-nav,
   .category-section,
   .content-section {
     width: min(100% - 32px, 1240px);
+  }
+
+  .header-nav {
+    padding-inline: 16px;
   }
 
   .header-actions .language-button,

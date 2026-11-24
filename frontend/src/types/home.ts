@@ -1,8 +1,9 @@
 export interface Banner {
-  id: string;
+  id: number;
+  productId: number;
   title: string;
   imageUrl: string;
-  linkUrl?: string;
+  linkUrl: string;
 }
 
 export interface Category {
@@ -53,4 +54,11 @@ export interface ApiProduct {
   price: number | null;
   cashbackPercentage: number | null;
   imageUrl: string;
+}
+
+export interface ProductSellerOffer {
+  id: number;
+  name: string;
+  price: number;
+  cashbackPercentage: number;
 }

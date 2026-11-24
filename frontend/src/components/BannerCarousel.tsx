@@ -1,38 +1,27 @@
 import { useEffect, useState } from "react";
-import { fetchProductById } from "../services/homeApi";
-import type { ApiProduct, Banner } from "../types/home";
-
-const bannerProductIds = [1, 2, 3, 4];
+import { fetchBanners } from "../services/homeApi";
+import type { Banner } from "../types/home";
 
 export function BannerCarousel() {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let active = true;
 
-    Promise.all(bannerProductIds.map((id) => fetchProductById(id)))
-      .then((products: ApiProduct[]) => {
-        if (!active) return;
-
-        setBanners(
-          products.map((product) => ({
-            id: String(product.id),
-            title: product.name,
-            imageUrl: product.imageUrl || "/images/banner-placeholder.svg",
-          })),
-        );
+    fetchBanners()
+      .then((items) => {
+        if (active) setBanners(items);
       })
-      .catch(() => {
-        if (!active) return;
-
-        setBanners(
-          bannerProductIds.map((id) => ({
-            id: String(id),
-            title: `Product ${id}`,
-            imageUrl: "/images/banner-placeholder.svg",
-          })),
-        );
+      .catch((requestError: unknown) => {
+        if (active) {
+          setError(
+            requestError instanceof Error
+              ? requestError.message
+              : "Failed to load banners",
+          );
+        }
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -43,22 +32,37 @@ export function BannerCarousel() {
     };
   }, []);
 
+  if (!loading && !error && banners.length === 0) {
+    return null;
+  }
+
   return (
     <section className="banner-section" aria-label="Promotions">
       {loading ? (
         <div className="banner-skeleton" />
+      ) : error ? (
+        <div className="banner-track">
+          <div className="banner-card">
+            <img src="/images/banner-placeholder.svg" alt="" />
+          </div>
+        </div>
       ) : (
         <div className="banner-track">
           {banners.map((banner) => (
-            <button className="banner-card" type="button" disabled key={banner.id} aria-label={banner.title}>
+            <a
+              className="banner-card"
+              href={banner.linkUrl}
+              key={banner.id}
+              aria-label={banner.title}
+            >
               <img
                 src={banner.imageUrl}
-                alt=""
+                alt={banner.title}
                 onError={(event) => {
                   event.currentTarget.src = "/images/banner-placeholder.svg";
                 }}
               />
-            </button>
+            </a>
           ))}
         </div>
       )}

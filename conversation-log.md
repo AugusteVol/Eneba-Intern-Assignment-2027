@@ -131,4 +131,98 @@ The banner should extend throughout the entire screen length-wise, not be center
 ### Response
 Changed [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css) so `.banner-section` uses the full viewport width and is no longer covered by the shared centered container width.
 
+### Prompt
+Visit eneba.com and add the menu space beneath the banner with only one button, Games, made interactable.
+
+### Response
+Updated [frontend/src/components/CategoryRail.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/CategoryRail.tsx) to render one centered Games button instead of a category API rail. Added purple hover, active, and keyboard-focus styling in [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css).
+
+### Prompt
+Create a new page for games reached by clicking Cheap Games in the header. Use the GET all-products endpoint.
+
+### Response
+Added [frontend/src/pages/CheapGamesPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/CheapGamesPage.tsx) and client-side page switching in [frontend/src/App.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/App.tsx). The header Cheap Games button switches to the page, and the brand button returns home. The page reuses `ProductSection`, which fetches `GET /api/products`.
+
+### Prompt
+Create a page for viewing a product using the example Eneba layout. Use the GET product endpoint and include a checkmark for every region. Do not add the pay sidebar, suggested games, reviews, or other-offer tabs.
+
+### Response
+Added [frontend/src/pages/ProductDetailPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/ProductDetailPage.tsx). Product cards now navigate to `/products/{id}` through client-side routing. The detail page fetches only `GET /api/products/{id}` and shows the cover, title, region with a green checkmark, platform, description, languages, release date, publisher, and creator. No suggested products, reviews, other-offer tabs, or payment sidebar were added.
+
+### Prompt
+Create "other sellers" offers below the product. Only sellers that have that game or gift card attached may be listed. Use the GET findAllByProductId endpoint. Formatting must be as close as possible to Eneba.com.
+
+### Response
+Added other-seller offers to [frontend/src/pages/ProductDetailPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/ProductDetailPage.tsx). The page fetches `GET /api/products/{id}/sellers` through `fetchProductSellers` and renders only sellers attached to the current product, including seller name, price, and cashback percentage. Added a compact Eneba-style offer list in [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css). The frontend build passes.
+
+### Prompt
+Finish creating a functional search bar. It will only search for product names.
+
+### Response
+Updated [frontend/src/components/Header.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/Header.tsx) so submitting the search form navigates to `/search?q=...`. Added [frontend/src/pages/SearchResultsPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/SearchResultsPage.tsx), which fetches `GET /api/products` and filters only `product.name`. Search results use the existing product-card layout and can open their product detail pages. The frontend build passes.
+
+### Prompt
+The search bar does not search upon pressing Enter. Add this button shortcut.
+
+### Response
+Updated [frontend/src/components/Header.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/Header.tsx) with an explicit submit button in the search form and retained form submission handling, allowing Enter to trigger `onSearch` and adding a visible Search button. Added submit-button hover and keyboard-focus styling in [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css).
+
+### Prompt
+Create the log in page using the provided Eneba login example. Do not add Google, Facebook, Apple, or similar third-party logins. Use only username and password.
+
+### Response
+Added [frontend/src/pages/LoginPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/LoginPage.tsx) with a centered purple split layout, username/password fields, create-account text, and submit/error/success states. Wired the header Log in button and `/login` route. Added `authenticate` to [backend/src/AccountRepository.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/src/AccountRepository.php) and `POST /login` in [backend/public/index.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/public/index.php). Valid seeded credentials return `200`; invalid credentials return `401`. The frontend build passes.
+
+## 2026-11-24
+
+### Prompt
+Add cart / cartitem tables to the backend folder.
+
+### Response
+Added `cart` and `cartItem` tables to the SQLite schema in `backend/database/seed.php` and to the SQL reference `backend/database/seed.sqlite.sql`, then applied them to the existing `backend/database/database.sqlite` with `CREATE TABLE IF NOT EXISTS` so the current seed data was kept.
+
+`cart` stores one cart per account (`account_id UNIQUE`, `created_at`, `updated_at`). `cartItem` references the cart, the product, and the specific seller offer (`product_id` + `seller_id` pointing at `productSeller`), enforces `quantity > 0`, and prevents duplicate rows with `UNIQUE (cart_id, product_id, seller_id)`. Both tables use `ON DELETE CASCADE`.
+
+Verified in a rolled-back transaction that valid inserts work, that an item for a non-existent seller offer is rejected by the foreign key, and that deleting a cart removes its items. Also fixed a pre-existing missing comma in `seed.sqlite.sql` that prevented the file from executing; the file now runs end to end.
+
+### Prompt
+The current /banner has hardcoded banners. Create a table named banner with id INT primary key, product_id INT (NOT NULL), a foreign key on product_id. Create bannerSeeder.php, read the #productseeder and apply the correct product_id. Banners will only be 4: Cyberpunk, Fortnite, GTA 5, EA sports FC25. Create bannerRepository.php and add GET endpoints. Do not edit the frontend.
+
+### Response
+Added the `banner` table (`id` primary key, `product_id` NOT NULL, foreign key to `product` with `ON DELETE CASCADE`) to `backend/database/seed.php`, `backend/database/seed.sqlite.sql`, and the live `backend/database/database.sqlite`. Added `backend/database/seeders/BannerSeeder.php` mapping the four banners to products 1-4 (Cyberpunk 2077, Fortnite, Grand Theft Auto V, EA Sports FC 25) and wired it into `seed.php` and `DatabaseSeeder`.
+
+Added `backend/src/BannerRepository.php` with `findAll` and `findById`, joining `product` so each banner returns `productId`, `title`, `imageUrl`, and `linkUrl`. Added `GET /banners`, `GET /banners/{id}`, and a `GET /home/banners` alias that matches the existing `fetchHomePage` contract.
+
+Verified with the XAMPP PHP 8.1 binary: all files pass `php -l`, `/banners` and `/banners/3` return 200, `/banners/99` returns 404, and running `seed.php` against a copy rebuilds a database with 12 products and 4 banners. No frontend files were changed.
+
+### Prompt
+Implement endpoint usage in #BannerCarousel.tsx . Log this prompt and your answer in #conversation-log.md
+
+### Response
+Wired `BannerCarousel` to `GET /api/banners` and removed the hardcoded `bannerProductIds = [1, 2, 3, 4]` list plus the four `fetchProductById` calls. The component now fetches the banner block from the backend, renders whatever the endpoint returns, keeps the existing loading skeleton, and falls back to `/images/banner-placeholder.svg` on request failure. An empty banner list renders no section.
+
+Each banner is now an `<a className="banner-card" href={banner.linkUrl}>` pointing at the product page, so the four promotion cards are clickable instead of `disabled`. The product image fallback on load error is unchanged.
+
+Supporting changes: added `fetchBanners()` to `frontend/src/services/homeApi.ts` using the existing `getJson` helper and `apiBaseUrl`, and updated the `Banner` interface in `frontend/src/types/home.ts` to match the API response (`id`, `productId`, `title`, `imageUrl`, `linkUrl`). No other component uses the type.
+
+Verified with `npm run build` in `frontend/`: TypeScript and the Vite production build pass.
+
+### Prompt
+Implement the shopping cart only (no checkout, payment, orders or keys).
+In the backend:
+1. Add CartRepository.php. Add GET and POST endpoints for the account's cart
+2. list items joined with product + seller (id, productId, name, imageUrl, region, platform, sellerId, sellerName, unitPrice, quantity, cashbackPercentage, total)
+3. add item (increment quantity when product+seller already in cart)
+4. update quantity
+5. remove item
+6. clear cart
+7. Price always read from productSeller, never stored
+
+Log this prompt and your response in #conversation-log.md
+
+### Response
+Added `backend/src/CartRepository.php` and account-scoped cart routes in `backend/public/index.php`: `GET`/`POST /accounts/{accountId}/cart`, `PATCH`/`DELETE /accounts/{accountId}/cart/items/{itemId}`, and `DELETE /accounts/{accountId}/cart`. Cart items join product, seller, and `productSeller`, increment on repeated adds, validate positive quantities and matching offers, and compute `total` from the current `productSeller.price` without storing a price. The prompt and this response are recorded here.
+
+PHP Language Server diagnostics reported no problems in the changed PHP files. In-memory SQLite checks passed for add/increment, live offer pricing, quantity update, removal, clear, and invalid-offer foreign-key enforcement. The PHP CLI is unavailable, so endpoint runtime tests could not be run.
+
 

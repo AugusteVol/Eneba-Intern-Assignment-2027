@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS cartItem;
+DROP TABLE IF EXISTS cart;
 DROP TABLE IF EXISTS productSeller;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS seller;
@@ -36,7 +38,6 @@ CREATE TABLE product (
     languages TEXT,
     currency_amount REAL,
     image_url TEXT NULL
-    image_url TEXT
 );
 
 CREATE TABLE productSeller (
@@ -47,6 +48,27 @@ CREATE TABLE productSeller (
     PRIMARY KEY (product_id, seller_id),
     FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
     FOREIGN KEY (seller_id) REFERENCES seller(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cart (
+    id INTEGER PRIMARY KEY,
+    account_id INTEGER NOT NULL UNIQUE,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+);
+
+CREATE TABLE cartItem (
+    id INTEGER PRIMARY KEY,
+    cart_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    seller_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+    added_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (cart_id, product_id, seller_id),
+    FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id, seller_id)
+        REFERENCES productSeller(product_id, seller_id) ON DELETE CASCADE
 );
 
 INSERT INTO seller (id, name) VALUES

@@ -173,4 +173,34 @@ Create the log in page using the provided Eneba login example. Do not add Google
 ### Response
 Added [frontend/src/pages/LoginPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/LoginPage.tsx) with a centered purple split layout, username/password fields, create-account text, and submit/error/success states. Wired the header Log in button and `/login` route. Added `authenticate` to [backend/src/AccountRepository.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/src/AccountRepository.php) and `POST /login` in [backend/public/index.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/public/index.php). Valid seeded credentials return `200`; invalid credentials return `401`. The frontend build passes.
 
+## 2026-11-24
+
+### Prompt
+Add cart / cartitem tables to the backend folder.
+
+### Response
+Added `cart` and `cartItem` tables to the SQLite schema in `backend/database/seed.php` and to the SQL reference `backend/database/seed.sqlite.sql`, then applied them to the existing `backend/database/database.sqlite` with `CREATE TABLE IF NOT EXISTS` so the current seed data was kept.
+
+`cart` stores one cart per account (`account_id UNIQUE`, `created_at`, `updated_at`). `cartItem` references the cart, the product, and the specific seller offer (`product_id` + `seller_id` pointing at `productSeller`), enforces `quantity > 0`, and prevents duplicate rows with `UNIQUE (cart_id, product_id, seller_id)`. Both tables use `ON DELETE CASCADE`.
+
+Verified in a rolled-back transaction that valid inserts work, that an item for a non-existent seller offer is rejected by the foreign key, and that deleting a cart removes its items. Also fixed a pre-existing missing comma in `seed.sqlite.sql` that prevented the file from executing; the file now runs end to end.
+
+### Prompt
+Implement the shopping cart only (no checkout, payment, orders or keys).
+In the backend:
+1. Add CartRepository.php. Add GET and POST endpoints for the account's cart
+2. list items joined with product + seller (id, productId, name, imageUrl, region, platform, sellerId, sellerName, unitPrice, quantity, cashbackPercentage, total)
+3. add item (increment quantity when product+seller already in cart)
+4. update quantity
+5. remove item
+6. clear cart
+7. Price always read from productSeller, never stored
+
+Log this prompt and your response in #conversation-log.md
+
+### Response
+Added `backend/src/CartRepository.php` and account-scoped cart routes in `backend/public/index.php`: `GET`/`POST /accounts/{accountId}/cart`, `PATCH`/`DELETE /accounts/{accountId}/cart/items/{itemId}`, and `DELETE /accounts/{accountId}/cart`. Cart items join product, seller, and `productSeller`, increment on repeated adds, validate positive quantities and matching offers, and compute `total` from the current `productSeller.price` without storing a price. The prompt and this response are recorded here.
+
+PHP Language Server diagnostics reported no problems in the changed PHP files. In-memory SQLite checks passed for add/increment, live offer pricing, quantity update, removal, clear, and invalid-offer foreign-key enforcement. The PHP CLI is unavailable, so endpoint runtime tests could not be run.
+
 

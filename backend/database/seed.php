@@ -59,6 +59,27 @@ $database->exec("
         FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
         FOREIGN KEY (seller_id) REFERENCES seller(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE cart (
+        id INTEGER PRIMARY KEY,
+        account_id INTEGER NOT NULL UNIQUE,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE cartItem (
+        id INTEGER PRIMARY KEY,
+        cart_id INTEGER NOT NULL,
+        product_id INTEGER NOT NULL,
+        seller_id INTEGER NOT NULL,
+        quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
+        added_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE (cart_id, product_id, seller_id),
+        FOREIGN KEY (cart_id) REFERENCES cart(id) ON DELETE CASCADE,
+        FOREIGN KEY (product_id, seller_id)
+            REFERENCES productSeller(product_id, seller_id) ON DELETE CASCADE
+    );
 ");
 
 $sellerStatement = $database->prepare(

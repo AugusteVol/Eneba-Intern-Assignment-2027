@@ -6,11 +6,13 @@ require_once dirname(__DIR__) . "/src/Database.php";
 require_once dirname(__DIR__) . "/src/ProductRepository.php";
 require_once dirname(__DIR__) . "/src/SellerRepository.php";
 require_once dirname(__DIR__) . "/src/AccountRepository.php";
+require_once dirname(__DIR__) . "/src/CartRepository.php";
 
 use App\Database;
 use App\ProductRepository;
 use App\SellerRepository;
 use App\AccountRepository;
+use App\CartRepository;
 
 header("Content-Type: application/json");
 
@@ -23,6 +25,7 @@ try {
     $productRepository = new ProductRepository($database);
     $sellerRepository = new SellerRepository($database);
     $accountRepository = new AccountRepository($database);
+    $cartRepository = new CartRepository($database);
 
     if ($method === "POST" && $path === "/login") {
         $body = json_decode((string) file_get_contents("php://input"), true);
@@ -92,7 +95,144 @@ try {
         exit;
     }
 
-    if ($method !== "GET") {
+    if (preg_match(
+        '#^/accounts/([1-9][0-9]*)/cart(?:/items/([1-9][0-9]*))?$#',
+        $path,
+        $matches,
+    )) {
+        $accountId = (int) $matches[1];
+        $itemId = isset($matches[2]) ? (int) $matches[2] : null;
+
+        if ($accountRepository->findById($accountId) === null) {
+            http_response_code(404);
+            echo json_encode(["error" => "Account not found"]);
+            exit;
+        }
+
+        if ($itemId !== null) {
+            if ($method === "PATCH") {
+                $body = json_decode((string) file_get_contents("php://input"), true);
+                $quantity = is_array($body)
+                    ? filter_var(
+                        $body["quantity"] ?? null,
+                        FILTER_VALIDATE_INT,
+                        ["options" => ["min_range" => 1]],
+                    )
+                    : false;
+
+                if ($quantity === false) {
+                    http_response_code(400);
+                    echo json_encode(["error" => "A positive integer quantity is required"]);
+                    exit;
+                }
+
+                if (!$cartRepository->updateQuantity($accountId, $itemId, $quantity)) {
+                    http_response_code(404);
+                    echo json_encode(["error" => "Cart item not found"]);
+                    exit;
+                }
+
+                http_response_code(200);
+                echo json_encode(
+                    $cartRepository->findByAccountId($accountId),
+                    JSON_UNESCAPED_UNICODE,
+                );
+                exit;
+            }
+
+            if ($method === "DELETE") {
+                if (!$cartRepository->removeItem($accountId, $itemId)) {
+                    http_response_code(404);
+                    echo json_encode(["error" => "Cart item not found"]);
+                    exit;
+                }
+
+                http_response_code(200);
+                echo json_encode($cartRepository->findByAccountId($accountId));
+                exit;
+            }
+
+            http_response_code(405);
+            header("Allow: PATCH, DELETE");
+            echo json_encode(["error" => "Method not allowed"]);
+            exit;
+        }
+
+        if ($method === "GET") {
+            http_response_code(200);
+            echo json_encode(
+                $cartRepository->findByAccountId($accountId),
+                JSON_UNESCAPED_UNICODE,
+            );
+            exit;
+        }
+
+        if ($method === "POST") {
+            $body = json_decode((string) file_get_contents("php://input"), true);
+            if (!is_array($body)) {
+                http_response_code(400);
+                echo json_encode(["error" => "Invalid JSON body"]);
+                exit;
+            }
+
+            $productId = filter_var(
+                $body["productId"] ?? null,
+                FILTER_VALIDATE_INT,
+                ["options" => ["min_range" => 1]],
+            );
+            $sellerId = filter_var(
+                $body["sellerId"] ?? null,
+                FILTER_VALIDATE_INT,
+                ["options" => ["min_range" => 1]],
+            );
+            $quantity = array_key_exists("quantity", $body)
+                ? filter_var(
+                    $body["quantity"],
+                    FILTER_VALIDATE_INT,
+                    ["options" => ["min_range" => 1]],
+                )
+                : 1;
+
+            if ($productId === false || $sellerId === false || $quantity === false) {
+                http_response_code(400);
+                echo json_encode([
+                    "error" => "Positive integer productId, sellerId, and quantity are required",
+                ]);
+                exit;
+            }
+
+            $item = $cartRepository->addItem(
+                $accountId,
+                $productId,
+                $sellerId,
+                $quantity,
+            );
+
+            if ($item === null) {
+                http_response_code(404);
+                echo json_encode(["error" => "Product seller offer not found"]);
+                exit;
+            }
+
+            http_response_code(200);
+            echo json_encode($item, JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        if ($method === "DELETE") {
+            $cartRepository->clear($accountId);
+            http_response_code(200);
+            echo json_encode([]);
+            exit;
+        }
+
+        http_response_code(405);
+        header("Allow: GET, POST, DELETE");
+        echo json_encode(["error" => "Method not allowed"]);
+        exit;
+    }
+
+    if (!in_array($method, ["GET", "POST"], true)) {
         http_response_code(405);
         header("Allow: GET, POST");
         echo json_encode(["error" => "Method not allowed"]);
@@ -180,5 +320,5 @@ try {
     echo json_encode(["error" => "Not found"]);
 } catch (Throwable $error) {
     http_response_code(500);
-    echo json_encode(["error" => "Unable to retrieve products"]);
+    echo json_encode(["error" => "Unable to process request"]);
 }

@@ -13,6 +13,7 @@ final class DatabaseSeeder
             "products" => ProductSeeder::items(),
             "product_sellers" => ProductSellerSeeder::items(),
             "accounts" => AccountSeeder::items(),
+            "banners" => BannerSeeder::items(),
         ];
     }
 }

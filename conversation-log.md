@@ -186,6 +186,28 @@ Added `cart` and `cartItem` tables to the SQLite schema in `backend/database/see
 Verified in a rolled-back transaction that valid inserts work, that an item for a non-existent seller offer is rejected by the foreign key, and that deleting a cart removes its items. Also fixed a pre-existing missing comma in `seed.sqlite.sql` that prevented the file from executing; the file now runs end to end.
 
 ### Prompt
+The current /banner has hardcoded banners. Create a table named banner with id INT primary key, product_id INT (NOT NULL), a foreign key on product_id. Create bannerSeeder.php, read the #productseeder and apply the correct product_id. Banners will only be 4: Cyberpunk, Fortnite, GTA 5, EA sports FC25. Create bannerRepository.php and add GET endpoints. Do not edit the frontend.
+
+### Response
+Added the `banner` table (`id` primary key, `product_id` NOT NULL, foreign key to `product` with `ON DELETE CASCADE`) to `backend/database/seed.php`, `backend/database/seed.sqlite.sql`, and the live `backend/database/database.sqlite`. Added `backend/database/seeders/BannerSeeder.php` mapping the four banners to products 1-4 (Cyberpunk 2077, Fortnite, Grand Theft Auto V, EA Sports FC 25) and wired it into `seed.php` and `DatabaseSeeder`.
+
+Added `backend/src/BannerRepository.php` with `findAll` and `findById`, joining `product` so each banner returns `productId`, `title`, `imageUrl`, and `linkUrl`. Added `GET /banners`, `GET /banners/{id}`, and a `GET /home/banners` alias that matches the existing `fetchHomePage` contract.
+
+Verified with the XAMPP PHP 8.1 binary: all files pass `php -l`, `/banners` and `/banners/3` return 200, `/banners/99` returns 404, and running `seed.php` against a copy rebuilds a database with 12 products and 4 banners. No frontend files were changed.
+
+### Prompt
+Implement endpoint usage in #BannerCarousel.tsx . Log this prompt and your answer in #conversation-log.md
+
+### Response
+Wired `BannerCarousel` to `GET /api/banners` and removed the hardcoded `bannerProductIds = [1, 2, 3, 4]` list plus the four `fetchProductById` calls. The component now fetches the banner block from the backend, renders whatever the endpoint returns, keeps the existing loading skeleton, and falls back to `/images/banner-placeholder.svg` on request failure. An empty banner list renders no section.
+
+Each banner is now an `<a className="banner-card" href={banner.linkUrl}>` pointing at the product page, so the four promotion cards are clickable instead of `disabled`. The product image fallback on load error is unchanged.
+
+Supporting changes: added `fetchBanners()` to `frontend/src/services/homeApi.ts` using the existing `getJson` helper and `apiBaseUrl`, and updated the `Banner` interface in `frontend/src/types/home.ts` to match the API response (`id`, `productId`, `title`, `imageUrl`, `linkUrl`). No other component uses the type.
+
+Verified with `npm run build` in `frontend/`: TypeScript and the Vite production build pass.
+
+### Prompt
 Implement the shopping cart only (no checkout, payment, orders or keys).
 In the backend:
 1. Add CartRepository.php. Add GET and POST endpoints for the account's cart

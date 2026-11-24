@@ -1,8 +1,9 @@
 export interface Banner {
-  id: string;
+  id: number;
+  productId: number;
   title: string;
   imageUrl: string;
-  linkUrl?: string;
+  linkUrl: string;
 }
 
 export interface Category {

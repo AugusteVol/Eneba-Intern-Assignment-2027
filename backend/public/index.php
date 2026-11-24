@@ -7,12 +7,14 @@ require_once dirname(__DIR__) . "/src/ProductRepository.php";
 require_once dirname(__DIR__) . "/src/SellerRepository.php";
 require_once dirname(__DIR__) . "/src/AccountRepository.php";
 require_once dirname(__DIR__) . "/src/CartRepository.php";
+require_once dirname(__DIR__) . "/src/BannerRepository.php";
 
 use App\Database;
 use App\ProductRepository;
 use App\SellerRepository;
 use App\AccountRepository;
 use App\CartRepository;
+use App\BannerRepository;
 
 header("Content-Type: application/json");
 
@@ -25,6 +27,7 @@ try {
     $productRepository = new ProductRepository($database);
     $sellerRepository = new SellerRepository($database);
     $accountRepository = new AccountRepository($database);
+    $bannerRepository = new BannerRepository($database);
     $cartRepository = new CartRepository($database);
 
     if ($method === "POST" && $path === "/login") {
@@ -256,6 +259,26 @@ try {
 
         http_response_code(200);
         echo json_encode($account, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if ($path === "/banners" || $path === "/home/banners") {
+        http_response_code(200);
+        echo json_encode($bannerRepository->findAll(), JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
+    if (preg_match('#^/banners/([1-9][0-9]*)$#', $path, $matches)) {
+        $banner = $bannerRepository->findById((int) $matches[1]);
+
+        if ($banner === null) {
+            http_response_code(404);
+            echo json_encode(["error" => "Banner not found"]);
+            exit;
+        }
+
+        http_response_code(200);
+        echo json_encode($banner, JSON_UNESCAPED_UNICODE);
         exit;
     }
 

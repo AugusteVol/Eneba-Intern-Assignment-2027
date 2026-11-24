@@ -8,6 +8,10 @@ async function getJson<T>(endpoint: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
+export async function fetchBanners(): Promise<Banner[]> {
+  return getJson<Banner[]>("/banners");
+}
+
 export async function fetchHomePage(): Promise<HomePageData> {
   const [banners, categories, sections] = await Promise.all([
     getJson<Banner[]>("/home/banners"),

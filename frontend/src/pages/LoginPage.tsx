@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { login } from "../services/authApi";
+import { mergeGuestCartIntoAccount } from "../services/cartApi";
 
 export function LoginPage() {
   const [username, setUsername] = useState("");
@@ -15,14 +16,18 @@ export function LoginPage() {
 
     try {
       const account = await login(username.trim(), password);
+      await mergeGuestCartIntoAccount(account.id);
       localStorage.setItem("accountId", String(account.id));
       setSuccess(`Welcome, ${account.username}!`);
-      window.location.href = "/";
+      window.location.href =
+        new URLSearchParams(window.location.search).get("returnTo") === "/payment"
+          ? "/payment"
+          : "/";
     } catch (requestError) {
       setError(
         requestError instanceof Error
           ? requestError.message
-          : "Unable to log in",
+          : "Unable to log in or transfer your cart",
       );
     }
   };
@@ -49,7 +54,7 @@ export function LoginPage() {
       <section className="login-card" aria-labelledby="login-title">
         <div className="login-card-heading">
           <h2 id="login-title">Log in</h2>
-          <p>New user? <button type="button" onClick={() => { window.location.href = "/register"; }}>Create account</button></p>
+          <p>New user? <button type="button" onClick={() => { window.location.href = `/register${window.location.search}`; }}>Create account</button></p>
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>

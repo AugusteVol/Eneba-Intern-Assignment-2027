@@ -1,9 +1,11 @@
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/backend/src").replace(/\/$/, "");
+
 export async function login(username: string, password: string): Promise<{
   id: number;
   username: string;
   role: "admin" | "user";
 }> {
-  const response = await fetch("/api/login", {
+  const response = await fetch(`${apiBaseUrl}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +25,7 @@ export async function fetchAccountById(id: number): Promise<{
   username: string;
   role: "admin" | "user";
 }> {
-  const response = await fetch(`/api/accounts/${id}`);
+  const response = await fetch(`${apiBaseUrl}/accounts/${id}`);
   if (!response.ok) {
     throw new Error("Account session is no longer valid");
   }
@@ -39,7 +41,7 @@ export async function registerAccount(
   username: string;
   role: "admin" | "user";
 }> {
-  const response = await fetch("/api/accounts", {
+  const response = await fetch(`${apiBaseUrl}/accounts`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

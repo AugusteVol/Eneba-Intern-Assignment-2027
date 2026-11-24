@@ -38,9 +38,6 @@ export function ProductSection({ onSelectProduct }: ProductSectionProps) {
 
   return (
     <section className="content-section">
-      <div className="section-heading">
-        <h2>{loading ? "" : "Most popular products"}</h2>
-      </div>
       {loading ? (
         <div className="product-grid">
           {Array.from({ length: 6 }).map((_, index) => <div className="product-card-skeleton" key={index} />)}

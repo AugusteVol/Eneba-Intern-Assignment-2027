@@ -7,17 +7,18 @@ import {
 import type { CartItem } from "../types/cart";
 
 export function CartPage() {
-  const accountId = Number(localStorage.getItem("accountId"));
-  const isSignedIn = Number.isInteger(accountId) && accountId > 0;
+  const storedAccountId = Number(localStorage.getItem("accountId"));
+  const accountId =
+    Number.isInteger(storedAccountId) && storedAccountId > 0
+      ? storedAccountId
+      : null;
 
   const [items, setItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(isSignedIn);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busyItemId, setBusyItemId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!isSignedIn) return;
-
     let active = true;
     setLoading(true);
     setError("");
@@ -42,7 +43,7 @@ export function CartPage() {
     return () => {
       active = false;
     };
-  }, [accountId, isSignedIn]);
+  }, [accountId]);
 
   const changeQuantity = async (item: CartItem, quantity: number) => {
     if (quantity < 1 || busyItemId !== null) return;
@@ -89,19 +90,14 @@ export function CartPage() {
     <main className="cart-page">
       <div className="cart-heading">
         <h1>Your cart</h1>
-        {isSignedIn && !loading ? (
+        {!loading ? (
           <span>
             {itemCount} item{itemCount === 1 ? "" : "s"}
           </span>
         ) : null}
       </div>
 
-      {!isSignedIn ? (
-        <div className="cart-empty">
-          <p>Log in to see your cart.</p>
-          <a className="cart-continue" href="/login">Log in</a>
-        </div>
-      ) : loading ? (
+      {loading ? (
         <p className="cart-status">Loading your cart…</p>
       ) : error && items.length === 0 ? (
         <p className="cart-status cart-error" role="alert">{error}</p>

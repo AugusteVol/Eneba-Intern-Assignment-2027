@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { registerAccount } from "../services/authApi";
+import { mergeGuestCartIntoAccount } from "../services/cartApi";
 
 export function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -15,9 +16,13 @@ export function RegisterPage() {
 
     try {
       const account = await registerAccount(username.trim(), password);
+      await mergeGuestCartIntoAccount(account.id);
       localStorage.setItem("accountId", String(account.id));
       setSuccess(`Welcome, ${account.username}!`);
-      window.location.href = "/";
+      window.location.href =
+        new URLSearchParams(window.location.search).get("returnTo") === "/payment"
+          ? "/payment"
+          : "/";
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -49,7 +54,7 @@ export function RegisterPage() {
       <section className="login-card" aria-labelledby="login-title">
         <div className="login-card-heading">
           <h2 id="login-title">Register</h2>
-          <p>Already have an account? <button type="button" onClick={() => { window.location.href = "/login"; }}>Log in</button></p>
+          <p>Already have an account? <button type="button" onClick={() => { window.location.href = `/login${window.location.search}`; }}>Log in</button></p>
         </div>
 
         <form className="login-form" onSubmit={handleSubmit}>

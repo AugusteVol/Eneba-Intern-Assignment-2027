@@ -173,7 +173,7 @@ export function PaymentPage() {
           {!isSignedIn ? (
             <div className="payment-empty">
               <p>Log in to continue to checkout.</p>
-              <a className="cart-continue" href="/login">Log in</a>
+              <a className="cart-continue" href="/login?returnTo=%2Fpayment">Log in</a>
             </div>
           ) : loading ? (
             <p className="payment-status">Loading your order…</p>

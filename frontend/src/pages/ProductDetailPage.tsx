@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchProductById, fetchProductSellers } from "../services/productApi";
-import { addCartItem } from "../services/cartApi";
+import { addCartItem, addGuestCartItem } from "../services/cartApi";
 import type { ApiProduct, ProductSellerOffer } from "../types/productselleroffer";
 
 interface ProductDetailPageProps {
@@ -98,20 +98,27 @@ export function ProductDetailPage({ productId }: ProductDetailPageProps) {
   const handleAddToCart = async () => {
     if (!recommendedOffer) return;
 
-    const accountId = Number(localStorage.getItem("accountId"));
-    if (!Number.isInteger(accountId) || accountId <= 0) {
-      setCartFeedback({
-        type: "error",
-        text: "Log in to add items to your cart.",
-      });
-      return;
-    }
-
     setAddingToCart(true);
     setCartFeedback(null);
 
     try {
-      await addCartItem(accountId, product.id, recommendedOffer.id, 1);
+      const accountId = Number(localStorage.getItem("accountId"));
+      if (Number.isInteger(accountId) && accountId > 0) {
+        await addCartItem(accountId, product.id, recommendedOffer.id, 1);
+      } else {
+        addGuestCartItem({
+          productId: product.id,
+          name: product.name,
+          imageUrl: product.imageUrl,
+          region: product.region,
+          platform: product.platform,
+          sellerId: recommendedOffer.id,
+          sellerName: recommendedOffer.name,
+          unitPrice: recommendedOffer.price,
+          quantity: 1,
+          cashbackPercentage: recommendedOffer.cashbackPercentage,
+        });
+      }
       setCartFeedback({ type: "success", text: "Added to your cart." });
     } catch (requestError) {
       setCartFeedback({

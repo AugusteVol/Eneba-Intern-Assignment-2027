@@ -70,6 +70,27 @@ final class AccountRepository
         return $this->findById($id) ?? [];
     }
 
+    public function authenticate(string $username, string $password): ?array
+    {
+        $statement = $this->database->prepare(
+            "SELECT id, username, password_hash, role
+             FROM account
+             WHERE username = :username",
+        );
+        $statement->execute(["username" => $username]);
+        $account = $statement->fetch();
+
+        if ($account === false) {
+            return null;
+        }
+
+        if (!password_verify($password, (string) $account["password_hash"])) {
+            return null;
+        }
+
+        return $this->formatAccount($account);
+    }
+
     private function formatAccount(array $account): array
     {
         return [

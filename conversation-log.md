@@ -131,4 +131,46 @@ The banner should extend throughout the entire screen length-wise, not be center
 ### Response
 Changed [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css) so `.banner-section` uses the full viewport width and is no longer covered by the shared centered container width.
 
+### Prompt
+Visit eneba.com and add the menu space beneath the banner with only one button, Games, made interactable.
+
+### Response
+Updated [frontend/src/components/CategoryRail.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/CategoryRail.tsx) to render one centered Games button instead of a category API rail. Added purple hover, active, and keyboard-focus styling in [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css).
+
+### Prompt
+Create a new page for games reached by clicking Cheap Games in the header. Use the GET all-products endpoint.
+
+### Response
+Added [frontend/src/pages/CheapGamesPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/CheapGamesPage.tsx) and client-side page switching in [frontend/src/App.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/App.tsx). The header Cheap Games button switches to the page, and the brand button returns home. The page reuses `ProductSection`, which fetches `GET /api/products`.
+
+### Prompt
+Create a page for viewing a product using the example Eneba layout. Use the GET product endpoint and include a checkmark for every region. Do not add the pay sidebar, suggested games, reviews, or other-offer tabs.
+
+### Response
+Added [frontend/src/pages/ProductDetailPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/ProductDetailPage.tsx). Product cards now navigate to `/products/{id}` through client-side routing. The detail page fetches only `GET /api/products/{id}` and shows the cover, title, region with a green checkmark, platform, description, languages, release date, publisher, and creator. No suggested products, reviews, other-offer tabs, or payment sidebar were added.
+
+### Prompt
+Create "other sellers" offers below the product. Only sellers that have that game or gift card attached may be listed. Use the GET findAllByProductId endpoint. Formatting must be as close as possible to Eneba.com.
+
+### Response
+Added other-seller offers to [frontend/src/pages/ProductDetailPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/ProductDetailPage.tsx). The page fetches `GET /api/products/{id}/sellers` through `fetchProductSellers` and renders only sellers attached to the current product, including seller name, price, and cashback percentage. Added a compact Eneba-style offer list in [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css). The frontend build passes.
+
+### Prompt
+Finish creating a functional search bar. It will only search for product names.
+
+### Response
+Updated [frontend/src/components/Header.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/Header.tsx) so submitting the search form navigates to `/search?q=...`. Added [frontend/src/pages/SearchResultsPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/SearchResultsPage.tsx), which fetches `GET /api/products` and filters only `product.name`. Search results use the existing product-card layout and can open their product detail pages. The frontend build passes.
+
+### Prompt
+The search bar does not search upon pressing Enter. Add this button shortcut.
+
+### Response
+Updated [frontend/src/components/Header.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/components/Header.tsx) with an explicit submit button in the search form and retained form submission handling, allowing Enter to trigger `onSearch` and adding a visible Search button. Added submit-button hover and keyboard-focus styling in [frontend/src/index.css](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/index.css).
+
+### Prompt
+Create the log in page using the provided Eneba login example. Do not add Google, Facebook, Apple, or similar third-party logins. Use only username and password.
+
+### Response
+Added [frontend/src/pages/LoginPage.tsx](/D:/GitHub/Eneba-Intern-Assignment-2027/frontend/src/pages/LoginPage.tsx) with a centered purple split layout, username/password fields, create-account text, and submit/error/success states. Wired the header Log in button and `/login` route. Added `authenticate` to [backend/src/AccountRepository.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/src/AccountRepository.php) and `POST /login` in [backend/public/index.php](/D:/GitHub/Eneba-Intern-Assignment-2027/backend/public/index.php). Valid seeded credentials return `200`; invalid credentials return `401`. The frontend build passes.
+
 

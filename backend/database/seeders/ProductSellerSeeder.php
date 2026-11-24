@@ -28,6 +28,10 @@ final class ProductSellerSeeder
             ["product_id" => 8, "seller_id" => 2, "price" => 23.49, "cashback_percentage" => 6.0],
             ["product_id" => 9, "seller_id" => 2, "price" => 55.99, "cashback_percentage" => 3.5],
             ["product_id" => 9, "seller_id" => 3, "price" => 57.25, "cashback_percentage" => 2.5],
+            ["product_id" => 10, "seller_id" => 2, "price" => 55.99, "cashback_percentage" => 3.5],
+            ["product_id" => 10, "seller_id" => 3, "price" => 57.25, "cashback_percentage" => 2.5],
+            ["product_id" => 11, "seller_id" => 2, "price" => 55.99, "cashback_percentage" => 3.5],
+            ["product_id" => 12, "seller_id" => 2, "price" => 55.99, "cashback_percentage" => 3.5],
         ];
     }
 }

@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { fetchAllProducts } from "../services/homeApi";
 import type { ApiProduct } from "../types/home";
 
-export function ProductSection() {
+interface ProductSectionProps {
+  onSelectProduct?: (id: number) => void;
+}
+
+export function ProductSection({ onSelectProduct }: ProductSectionProps) {
   const [products, setProducts] = useState<ApiProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -48,7 +52,12 @@ export function ProductSection() {
       ) : (
         <div className="product-grid">
           {products.map((product) => (
-            <button className="product-card" type="button" key={product.id}>
+            <button
+              className="product-card"
+              type="button"
+              key={product.id}
+              onClick={() => onSelectProduct?.(product.id)}
+            >
               <div className="product-image-wrap">
                 <img src={product.imageUrl} alt={product.name} onError={(event) => {
                   event.currentTarget.src = "/images/product-placeholder.svg";

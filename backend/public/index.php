@@ -24,6 +24,37 @@ try {
     $sellerRepository = new SellerRepository($database);
     $accountRepository = new AccountRepository($database);
 
+    if ($method === "POST" && $path === "/login") {
+        $body = json_decode((string) file_get_contents("php://input"), true);
+
+        if (!is_array($body)) {
+            http_response_code(400);
+            echo json_encode(["error" => "Invalid JSON body"]);
+            exit;
+        }
+
+        $username = trim((string) ($body["username"] ?? ""));
+        $password = (string) ($body["password"] ?? "");
+
+        if ($username === "" || $password === "") {
+            http_response_code(400);
+            echo json_encode(["error" => "Username and password are required"]);
+            exit;
+        }
+
+        $account = $accountRepository->authenticate($username, $password);
+
+        if ($account === null) {
+            http_response_code(401);
+            echo json_encode(["error" => "Invalid username or password"]);
+            exit;
+        }
+
+        http_response_code(200);
+        echo json_encode($account, JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     if ($method === "POST" && $path === "/accounts") {
         $body = json_decode((string) file_get_contents("php://input"), true);
 

@@ -54,3 +54,10 @@ export interface ApiProduct {
   cashbackPercentage: number | null;
   imageUrl: string;
 }
+
+export interface ProductSellerOffer {
+  id: number;
+  name: string;
+  price: number;
+  cashbackPercentage: number;
+}

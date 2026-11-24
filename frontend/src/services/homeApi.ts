@@ -6,7 +6,6 @@ import { Category } from "../types/category";
 
 //import type { Category } from "../types/category";
 
-
 export async function fetchHomePage(): Promise<HomePageData> {
   const [banners, categories, sections] = await Promise.all([
     getJson<Banner[]>("/home/banners"),

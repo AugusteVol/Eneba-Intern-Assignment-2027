@@ -1,7 +1,7 @@
 export function KeyPage() {
   return (
     <section className="key-page" aria-labelledby="key-page-title">
-      <h1 id="key-page-title">Your key</h1>
+      <h1 id="key-page-title">Thank you for your purchase!</h1>
 
       <div className="key-delivery-card">
         <div className="key-product-overview">

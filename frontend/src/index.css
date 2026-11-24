@@ -404,15 +404,20 @@ button {
   padding: 0 0 42px;
 }
 
+.page-section-heading {
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.page-section-heading h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
 .cheap-games-page {
   width: min(1240px, calc(100% - 48px));
   margin-inline: auto;
   padding: 32px 0 48px;
-}
-
-.cheap-games-page h1 {
-  margin: 0 0 18px;
-  font-size: 32px;
 }
 
 .key-page {

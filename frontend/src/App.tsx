@@ -109,11 +109,16 @@ export default function App() {
           <>
             <BannerCarousel />
             <CategoryRail categories={[]} loading={false} />
+            <div className="content-section page-section-heading">
+              <h1>Most popular products</h1>
+            </div>
             <ProductSection onSelectProduct={openProduct} />
           </>
         ) : route.page === "cheap-games" ? (
           <section className="cheap-games-page">
-            <h1>Cheap Games</h1>
+            <div className="content-section page-section-heading">
+              <h1>Cheap Games</h1>
+            </div>
             <ProductSection onSelectProduct={openProduct} />
           </section>
         ) : route.page === "search" ? (

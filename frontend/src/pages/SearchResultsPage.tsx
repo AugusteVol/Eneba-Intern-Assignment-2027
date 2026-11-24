@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchAllProducts } from "../services/homeApi";
-import type { ApiProduct } from "../types/home";
+import { fetchAllProducts } from "../services/productApi";
+import type { ApiProduct } from "../types/productselleroffer";
 
 interface SearchResultsPageProps {
   query: string;

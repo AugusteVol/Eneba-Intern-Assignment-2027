@@ -9,6 +9,8 @@ interface HeaderProps {
   onRegister: () => void;
   accountUsername?: string;
   onLogout: () => void;
+  onCart: () => void;
+  onFavorites: () => void;
 }
 
 export function Header({
@@ -19,6 +21,8 @@ export function Header({
   onRegister,
   accountUsername,
   onLogout,
+  onCart,
+  onFavorites,
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -70,8 +74,8 @@ export function Header({
           <button className="language-button" type="button">
             <span aria-hidden="true">🇪🇺</span><span>English EU | EUR</span>
           </button>
-          <button className="icon-button" type="button" aria-label="Favorites">♡</button>
-          <button className="icon-button" type="button" aria-label="Cart">🛒</button>
+          <button className="icon-button" type="button" aria-label="Favorites" onClick={onFavorites}>♡</button>
+          <button className="icon-button" type="button" aria-label="Cart" onClick={onCart}>🛒</button>
           <div className="account-actions">
             {accountUsername ? (
               <div className="account-menu">

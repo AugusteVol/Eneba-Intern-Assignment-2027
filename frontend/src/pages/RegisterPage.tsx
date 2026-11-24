@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { registerAccount } from "../services/homeApi";
+import { registerAccount } from "../services/authApi";
 
 export function RegisterPage() {
   const [username, setUsername] = useState("");

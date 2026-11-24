@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchBanners } from "../services/homeApi";
-import type { Banner } from "../types/home";
+import { fetchBanners } from "../services/bannerApi";
+import type { Banner } from "../types/banner";
 
 export function BannerCarousel() {
   const [banners, setBanners] = useState<Banner[]>([]);

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { login } from "../services/homeApi";
+import { login } from "../services/authApi";
 
 export function LoginPage() {
   const [username, setUsername] = useState("");

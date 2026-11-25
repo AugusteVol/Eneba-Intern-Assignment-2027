@@ -92,6 +92,7 @@ $database->exec("
         id INTEGER PRIMARY KEY,
         account_id INTEGER NOT NULL,
         total REAL NOT NULL,
+        payment_method TEXT,
         created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE
     );
@@ -100,10 +101,12 @@ $database->exec("
         id INTEGER PRIMARY KEY,
         order_id INTEGER NOT NULL,
         product_id INTEGER NOT NULL,
+        seller_id INTEGER,
         unit_price REAL NOT NULL,
         key_value TEXT NOT NULL UNIQUE,
         FOREIGN KEY (order_id) REFERENCES purchaseOrder(id) ON DELETE CASCADE,
-        FOREIGN KEY (product_id) REFERENCES product(id)
+        FOREIGN KEY (product_id) REFERENCES product(id),
+        FOREIGN KEY (seller_id) REFERENCES seller(id) ON DELETE SET NULL
     );
 ");
 

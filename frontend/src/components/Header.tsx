@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { FormEvent, KeyboardEvent } from "react";
 
 interface HeaderProps {
-  onCheapGames: () => void;
+  onAllGames: () => void;
   onHome: () => void;
   onSearch: (query: string) => void;
   onLogin: () => void;
@@ -11,10 +11,13 @@ interface HeaderProps {
   onLogout: () => void;
   onCart: () => void;
   onFavorites: () => void;
+  onOrderHistory: () => void;
+  onCategories: () => void;
+  categoriesOpen: boolean;
 }
 
 export function Header({
-  onCheapGames,
+  onAllGames,
   onHome,
   onSearch,
   onLogin,
@@ -23,6 +26,9 @@ export function Header({
   onLogout,
   onCart,
   onFavorites,
+  onOrderHistory,
+  onCategories,
+  categoriesOpen,
 }: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
@@ -70,18 +76,19 @@ export function Header({
             Search
           </button>
         </form>
-        <div className="header-actions">
+        <div className={`header-actions${accountUsername ? " is-signed-in" : ""}`}>
           <button className="language-button" type="button">
             <span aria-hidden="true">🇪🇺</span><span>English EU | EUR</span>
           </button>
           <button className="icon-button" type="button" aria-label="Favorites" onClick={onFavorites}>♡</button>
           <button className="icon-button" type="button" aria-label="Cart" onClick={onCart}>🛒</button>
-          <div className="account-actions">
+          <div className={`account-actions${accountUsername ? " is-signed-in" : ""}`}>
             {accountUsername ? (
               <div className="account-menu">
                 <button
                   className="account-button account-username"
                   type="button"
+                  aria-label={`Account: ${accountUsername}`}
                   aria-expanded={accountMenuOpen}
                   onClick={() => setAccountMenuOpen((open) => !open)}
                 >
@@ -89,16 +96,26 @@ export function Header({
                   <span>{accountUsername}</span>
                 </button>
                 {accountMenuOpen ? (
-                  <button
-                    className="logout-button"
-                    type="button"
-                    onClick={() => {
-                      setAccountMenuOpen(false);
-                      onLogout();
-                    }}
-                  >
-                    Log out
-                  </button>
+                  <div className="account-dropdown">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        onOrderHistory();
+                      }}
+                    >
+                      Order history
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        onLogout();
+                      }}
+                    >
+                      Log out
+                    </button>
+                  </div>
                 ) : null}
               </div>
             ) : (
@@ -115,11 +132,11 @@ export function Header({
         </div>
       </div>
       <nav className="header-nav" aria-label="Main navigation">
-        <button className="nav-text-button" type="button">☰ Categories</button>
-        <button className="nav-text-button" type="button" onClick={onCheapGames}>Cheap Games</button>
-        <button className="nav-text-button" type="button">Software</button>
-        <button className="nav-text-button" type="button">eGift Cards</button>
-        <button className="nav-text-button" type="button">Eneba Gift Cards</button>
+        <button className="nav-text-button" type="button" onClick={onCategories} aria-expanded={categoriesOpen} aria-controls={categoriesOpen ? "category-filters" : undefined}>☰ Categories</button>
+        <button className="nav-text-button" type="button" onClick={onAllGames}>All Games</button>
+        <button className="nav-text-button" type="button">Software (WIP)</button>
+        <button className="nav-text-button" type="button">eGift Cards (WIP)</button>
+        <button className="nav-text-button" type="button">Eneba Gift Cards (WIP)</button>
       </nav>
     </header>
   );

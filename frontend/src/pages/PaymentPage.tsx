@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { clearCart, fetchCart } from "../services/cartApi";
+import { fetchCart } from "../services/cartApi";
+import { createOrder } from "../services/keyApi";
 import { fetchProductById, fetchProductSellers } from "../services/productApi";
 import type { ProductSellerOffer } from "../types/productselleroffer";
 
@@ -37,13 +38,13 @@ const paymentProviders = [
 ] as const;
 
 type PaymentProviderId = (typeof paymentProviders)[number]["id"];
-
 interface PaymentLine {
   key: string;
   name: string;
   detail: string;
   quantity: number;
   total: number;
+  sellerId: number;
 }
 
 export function PaymentPage() {
@@ -94,6 +95,7 @@ export function PaymentPage() {
             detail: `${offer.name} · ${product.region} · ${product.platform}`,
             quantity: 1,
             total: offer.price,
+            sellerId: offer.id,
           },
         ];
       }
@@ -106,6 +108,7 @@ export function PaymentPage() {
         detail: `${item.sellerName} · € ${item.unitPrice.toFixed(2)} each`,
         quantity: item.quantity,
         total: item.total,
+        sellerId: item.sellerId,
       }));
     };
 
@@ -132,22 +135,24 @@ export function PaymentPage() {
   }, [accountId, isBuyNow, isSignedIn, productIdParam, sellerIdParam]);
 
   useEffect(() => {
-    if (!processing) return;
+    if (!processing || !provider) return;
 
     const timer = window.setTimeout(async () => {
-      if (!isBuyNow) {
-        try {
-          await clearCart(accountId);
-        } catch {
-          // The simulated payment has already succeeded; navigation still proceeds.
-        }
+      try {
+        const order = await createOrder(
+          accountId,
+          provider,
+          isBuyNow ? { productId: productIdParam, sellerId: lines[0].sellerId } : undefined,
+        );
+        window.location.href = `/key?orderId=${order.orderId}`;
+      } catch (requestError: unknown) {
+        setError(requestError instanceof Error ? requestError.message : "Unable to create your order.");
+        setProcessing(false);
       }
-
-      window.location.href = "/key";
     }, 2000);
 
     return () => window.clearTimeout(timer);
-  }, [accountId, isBuyNow, processing]);
+  }, [accountId, isBuyNow, lines, processing, productIdParam, provider]);
 
   const itemCount = lines.reduce((count, line) => count + line.quantity, 0);
   const total = lines.reduce((sum, line) => sum + line.total, 0);

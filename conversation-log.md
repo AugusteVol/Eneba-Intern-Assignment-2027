@@ -399,3 +399,9 @@ I've changed cheap games to all games. Change any remaining "cheap games" to "al
 Updated the heading, route, and server rewrite to “All Games.” CSS class names were left unchanged.
 
 Type-check passed.
+
+### Prompt
+remove any unused css classes. Be extremely careful and take your time. Under no circumstances are you allowed to delete a class if you are not absolutely sure it's not used somewhere in the front-end.
+
+### Response
+Removed six confirmed-unused CSS classes. Preserved dynamically generated classes.

@@ -77,25 +77,27 @@ export function AllGamesPage({ categoriesOpen, onSelectProduct }: AllGamesPagePr
                 {availableRegions.map((option) => <option value={option} key={option}>{option}</option>)}
               </select>
             </div>
-            <fieldset className="category-filter-group">
-              <legend>Platform</legend>
-              {availablePlatforms.map((platform) => (
-                <label className="category-platform" key={platform}>
-                  <input
-                    type="checkbox"
-                    checked={platforms.includes(platform)}
-                    onChange={(event) => {
-                      const checked = event.target.checked;
-                      setPlatforms((selected) => checked
-                        ? [...selected, platform]
-                        : selected.filter((item) => item !== platform));
-                    }}
-                  />
-                  <span>{platform}</span>
-                  <span className="category-platform-count" aria-hidden="true">{products.filter((product) => product.platform === platform).length}</span>
-                </label>
-              ))}
-            </fieldset>
+            <div className="category-filter-group">
+              <fieldset className="category-platform-filter">
+                <legend>Platform</legend>
+                {availablePlatforms.map((platform) => (
+                  <label className="category-platform" key={platform}>
+                    <input
+                      type="checkbox"
+                      checked={platforms.includes(platform)}
+                      onChange={(event) => {
+                        const checked = event.target.checked;
+                        setPlatforms((selected) => checked
+                          ? [...selected, platform]
+                          : selected.filter((item) => item !== platform));
+                      }}
+                    />
+                    <span>{platform}</span>
+                    <span className="category-platform-count" aria-hidden="true">{products.filter((product) => product.platform === platform).length}</span>
+                  </label>
+                ))}
+              </fieldset>
+            </div>
             <button className="category-clear" type="button" onClick={() => {
               setPlatforms([]);
               setRegion("");

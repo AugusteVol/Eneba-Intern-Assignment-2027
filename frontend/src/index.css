@@ -274,14 +274,6 @@ button {
   cursor: pointer;
 }
 
-.header-nav .nav-menu-button {
-  font-size: 23px;
-  width: 42px;
-  height: 42px;
-  padding: 0;
-  border-radius: 4px;
-}
-
 .header-nav .nav-text-button {
   height: 42px;
   padding: 0 10px;
@@ -328,8 +320,7 @@ button {
 }
 
 .banner-skeleton,
-.product-card-skeleton,
-.gift-card-skeleton {
+.product-card-skeleton {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite linear;
@@ -533,6 +524,13 @@ button {
 
 .category-price-inputs input::placeholder {
   color: #c4b8e4;
+}
+
+.category-platform-filter {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
 .category-platform {
@@ -1061,30 +1059,6 @@ button {
   color: #55e57f;
   font-size: 13px;
   font-weight: 800;
-}
-
-.purchase-payment-placeholder {
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin: 0 18px 14px;
-  background: #fff;
-}
-
-.purchase-payment-placeholder span:first-child {
-  width: 48px;
-  height: 12px;
-  border-radius: 8px;
-  background: #d9d5e0;
-}
-
-.purchase-payment-placeholder span:last-child {
-  width: 22px;
-  height: 16px;
-  border-radius: 3px;
-  background: #ece9f0;
 }
 
 .purchase-buttons {
@@ -1619,8 +1593,7 @@ button {
   padding: 10px;
 }
 
-.product-region,
-.seller-name {
+.product-region {
   color: #bbb0dc;
   font-size: 11px;
 }
@@ -1653,32 +1626,6 @@ button {
   border-radius: 4px;
 }
 
-.gift-card-grid {
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.gift-card {
-  aspect-ratio: 1;
-  padding: 0;
-  overflow: hidden;
-  background: transparent;
-  border-radius: 4px;
-}
-
-.gift-card img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-
-.gift-card-skeleton {
-  aspect-ratio: 1;
-  border-radius: 4px;
-}
-
 @keyframes shimmer {
   to { background-position: -200% 0; }
 }
@@ -1706,9 +1653,6 @@ button {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
-  .gift-card-grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 640px) {
@@ -1835,9 +1779,6 @@ button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .gift-card-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 /* Cart */

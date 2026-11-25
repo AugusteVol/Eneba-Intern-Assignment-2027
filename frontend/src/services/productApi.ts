@@ -28,3 +28,12 @@ export async function fetchProductSellers(id: number): Promise<ProductSellerOffe
 
   return response.json() as Promise<ProductSellerOffer[]>;
 }
+
+export async function fetchSellerById(id: number): Promise<Pick<ProductSellerOffer, "id" | "name">> {
+  const response = await fetch(`${apiBaseUrl}/sellers/${id}`);
+  if (!response.ok) {
+    throw new Error(`Failed to load seller ${id}`);
+  }
+
+  return response.json() as Promise<Pick<ProductSellerOffer, "id" | "name">>;
+}

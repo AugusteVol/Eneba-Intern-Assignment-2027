@@ -2,6 +2,22 @@
 
 declare(strict_types=1);
 
+$allowedOrigin = getenv("FRONTEND_ORIGIN");
+$requestOrigin = $_SERVER["HTTP_ORIGIN"] ?? "";
+
+header("Vary: Origin");
+
+if ($allowedOrigin && $requestOrigin === $allowedOrigin) {
+    header("Access-Control-Allow-Origin: " . $allowedOrigin);
+    header("Access-Control-Allow-Methods: GET, POST, PATCH, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type");
+}
+
+if (($_SERVER["REQUEST_METHOD"] ?? "") === "OPTIONS") {
+    http_response_code(204);
+    exit;
+}
+
 require_once dirname(__DIR__) . "/src/Database.php";
 require_once dirname(__DIR__) . "/src/ProductRepository.php";
 require_once dirname(__DIR__) . "/src/SellerRepository.php";
@@ -9,6 +25,7 @@ require_once dirname(__DIR__) . "/src/AccountRepository.php";
 require_once dirname(__DIR__) . "/src/CartRepository.php";
 require_once dirname(__DIR__) . "/src/BannerRepository.php";
 require_once dirname(__DIR__) . "/src/KeyRepository.php";
+require_once dirname(__DIR__) . "/src/OrderRepository.php";
 
 use App\Database;
 use App\ProductRepository;
@@ -17,6 +34,7 @@ use App\AccountRepository;
 use App\CartRepository;
 use App\BannerRepository;
 use App\KeyRepository;
+use App\OrderRepository;
 
 header("Content-Type: application/json");
 
@@ -32,6 +50,7 @@ try {
     $bannerRepository = new BannerRepository($database);
     $cartRepository = new CartRepository($database);
     $keyRepository = new KeyRepository($database);
+    $orderRepository = new OrderRepository($database);
 
     if ($method === "POST" && $path === "/login") {
         $body = json_decode((string) file_get_contents("php://input"), true);
@@ -238,6 +257,125 @@ try {
         exit;
     }
 
+    if (preg_match('#^/accounts/([1-9][0-9]*)/orders$#', $path, $matches)) {
+        $accountId = (int) $matches[1];
+        if (!in_array($method, ["GET", "POST"], true)) {
+            http_response_code(405);
+            header("Allow: GET, POST");
+            echo json_encode(["error" => "Method not allowed"]);
+            exit;
+        }
+
+        if ($accountRepository->findById($accountId) === null) {
+            http_response_code(404);
+            echo json_encode(["error" => "Account not found"]);
+            exit;
+        }
+
+        if ($method === "GET") {
+            http_response_code(200);
+            echo json_encode($orderRepository->findByAccountId($accountId), JSON_UNESCAPED_UNICODE);
+            exit;
+        }
+
+        $body = json_decode((string) file_get_contents("php://input"), true);
+        if (!is_array($body)) {
+            http_response_code(400);
+            echo json_encode(["error" => "Invalid JSON body"]);
+            exit;
+        }
+
+        $paymentMethod = $body["paymentMethod"] ?? null;
+        if ($paymentMethod !== null && !in_array(
+            $paymentMethod,
+            ["card", "paypal", "skrill", "paysera", "bank-transfer", "mobile"],
+            true,
+        )) {
+            http_response_code(400);
+            echo json_encode(["error" => "Invalid payment method"]);
+            exit;
+        }
+
+        $buyNow = array_key_exists("productId", $body) || array_key_exists("sellerId", $body);
+        if ($buyNow) {
+            $productId = filter_var($body["productId"] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
+            $sellerId = filter_var($body["sellerId"] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
+            if ($productId === false || $sellerId === false) {
+                http_response_code(400);
+                echo json_encode(["error" => "Positive integer productId and sellerId are required"]);
+                exit;
+            }
+        }
+
+        $database->beginTransaction();
+        try {
+            if ($buyNow) {
+                $offer = null;
+                foreach ($sellerRepository->findAllByProductId($productId) as $candidate) {
+                    if ($candidate["id"] === $sellerId) {
+                        $offer = $candidate;
+                        break;
+                    }
+                }
+                if ($offer === null) {
+                    $database->rollBack();
+                    http_response_code(404);
+                    echo json_encode(["error" => "Product seller offer not found"]);
+                    exit;
+                }
+                $items = [["productId" => $productId, "sellerId" => $sellerId, "unitPrice" => $offer["price"], "quantity" => 1]];
+            } else {
+                $items = $cartRepository->findByAccountId($accountId);
+                if ($items === []) {
+                    $database->rollBack();
+                    http_response_code(409);
+                    echo json_encode(["error" => "Cart is empty"]);
+                    exit;
+                }
+            }
+
+            $total = 0.0;
+            foreach ($items as $item) {
+                $total += $item["unitPrice"] * $item["quantity"];
+            }
+            $statement = $database->prepare(
+                "INSERT INTO purchaseOrder (account_id, total, payment_method)
+                 VALUES (:account_id, :total, :payment_method)",
+            );
+            $statement->execute([
+                "account_id" => $accountId,
+                "total" => round($total, 2),
+                "payment_method" => $paymentMethod,
+            ]);
+            $orderId = (int) $database->lastInsertId();
+
+            foreach ($items as $item) {
+                for ($i = 0; $i < $item["quantity"]; $i++) {
+                    $keyRepository->createForOrder(
+                        $orderId,
+                        $item["productId"],
+                        $item["sellerId"],
+                        $item["unitPrice"],
+                    );
+                }
+            }
+            if (!$buyNow) {
+                $cartRepository->clear($accountId);
+            }
+            $database->commit();
+        } catch (Throwable $error) {
+            if ($database->inTransaction()) {
+                $database->rollBack();
+            }
+            error_log("Order creation failed: " . $error->getMessage());
+            throw $error;
+        }
+
+        http_response_code(201);
+        echo json_encode(["orderId" => $orderId]);
+        exit;
+    }
+
     if (!in_array($method, ["GET", "POST"], true)) {
         http_response_code(405);
         header("Allow: GET, POST");
@@ -267,6 +405,15 @@ try {
 
     if ($method === "GET" && preg_match('#^/accounts/([1-9][0-9]*)/keys$#', $path, $matches)) {
         $accountId = (int) $matches[1];
+        $orderId = null;
+        if (isset($_GET["orderId"])) {
+            $orderId = filter_var($_GET["orderId"], FILTER_VALIDATE_INT, ["options" => ["min_range" => 1]]);
+            if ($orderId === false) {
+                http_response_code(400);
+                echo json_encode(["error" => "A positive integer orderId is required"]);
+                exit;
+            }
+        }
 
         if ($accountRepository->findById($accountId) === null) {
             http_response_code(404);
@@ -276,7 +423,7 @@ try {
 
         http_response_code(200);
         echo json_encode(
-            $keyRepository->findByAccountId($accountId),
+            $keyRepository->findByAccountId($accountId, $orderId),
             JSON_UNESCAPED_UNICODE,
         );
         exit;

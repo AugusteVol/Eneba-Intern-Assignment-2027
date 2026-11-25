@@ -11,6 +11,15 @@ export async function fetchAllProducts(): Promise<ApiProduct[]> {
   return response.json() as Promise<ApiProduct[]>;
 }
 
+export async function fetchProductPage(page: number): Promise<ApiProduct[]> {
+  const response = await fetch(`${apiBaseUrl}/products/paged?page=${page}`);
+  if (!response.ok) {
+    throw new Error("Failed to load products");
+  }
+
+  return response.json() as Promise<ApiProduct[]>;
+}
+
 export async function fetchProductById(id: number): Promise<ApiProduct> {
   const response = await fetch(`${apiBaseUrl}/products/${id}`);
   if (!response.ok) {

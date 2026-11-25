@@ -449,6 +449,25 @@ try {
         exit;
     }
 
+    if ($method === "GET" && $path === "/products/paged") {
+        $page = filter_var(
+            $_GET["page"] ?? 1,
+            FILTER_VALIDATE_INT,
+            ["options" => [
+                "min_range" => 1,
+                "max_range" => intdiv(PHP_INT_MAX, 6) + 1,
+            ]],
+        );
+        if ($page === false) {
+            http_response_code(400);
+            echo json_encode(["error" => "Page must be a positive integer within the supported range"]);
+            exit;
+        }
+
+        echo json_encode($productRepository->findAll($page), JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+
     if ($path === "/products") {
         http_response_code(200);
         echo json_encode($productRepository->findAll(), JSON_UNESCAPED_UNICODE);

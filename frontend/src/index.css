@@ -41,7 +41,6 @@ button {
 
 .header-main,
 .header-nav,
-.category-section,
 .content-section {
   width: min(1240px, calc(100% - 48px));
   max-width: 1240px;
@@ -329,7 +328,6 @@ button {
 }
 
 .banner-skeleton,
-.category-skeleton,
 .product-card-skeleton,
 .gift-card-skeleton {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
@@ -340,70 +338,6 @@ button {
 .banner-skeleton {
   width: 100%;
   height: 266px;
-  border-radius: 4px;
-}
-
-.category-section {
-  padding: 18px 0 34px;
-}
-
-.category-track,
-.category-skeletons {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 12px;
-}
-
-.games-menu {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.category-card {
-  min-width: 0;
-  height: 112px;
-  width: 112px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  color: #fff;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.category-card:hover,
-.category-card:active,
-.category-card:focus-visible {
-  background: #6536c5;
-  outline: none;
-}
-
-.category-card img,
-.category-icon-placeholder {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.games-icon {
-  display: grid;
-  place-items: center;
-  border: 2px solid #fff;
-  background: transparent;
-  font-size: 30px;
-  font-weight: 400;
-}
-
-.category-skeleton {
-  height: 112px;
   border-radius: 4px;
 }
 
@@ -493,9 +427,37 @@ button {
   margin-bottom: 18px;
 }
 
+.banner-section + .page-section-heading {
+  margin-top: 18px;
+}
+
 .page-section-heading h1 {
   margin: 0;
   font-size: 32px;
+}
+
+.home-products > .content-section:first-child {
+  padding-bottom: 18px;
+}
+
+.product-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.product-pagination button {
+  padding: 8px 16px;
+  color: #fff;
+  background: #6536c5;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.product-pagination button:disabled {
+  opacity: 0.5;
+  cursor: default;
 }
 
 .cheap-games-page {
@@ -1723,7 +1685,6 @@ button {
 
 @media (max-width: 980px) {
   .header-main,
-  .category-section,
   .content-section {
     width: min(100% - 32px, 1240px);
   }
@@ -1743,11 +1704,6 @@ button {
 
   .product-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .category-track,
-  .category-skeletons {
-    grid-template-columns: repeat(4, 1fr);
   }
 
   .gift-card-grid {
@@ -1865,19 +1821,6 @@ button {
 
   .banner-track {
     grid-auto-columns: 82%;
-  }
-
-  .category-track,
-  .category-skeletons {
-    grid-auto-flow: column;
-    grid-template-columns: none;
-    grid-auto-columns: 82px;
-    overflow-x: auto;
-  }
-
-  .category-card,
-  .category-skeleton {
-    height: 96px;
   }
 
   .product-detail-grid {

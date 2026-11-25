@@ -12,9 +12,9 @@ final class ProductRepository
     {
     }
 
-    public function findAll(): array
+    public function findAll(?int $page = null): array
     {
-        $statement = $this->database->query(
+        $sql =
             "SELECT
                 p.id,
                 p.name,
@@ -39,8 +39,13 @@ final class ProductRepository
              FROM product p
              LEFT JOIN productSeller ps ON ps.product_id = p.id
              GROUP BY p.id
-             ORDER BY p.id ASC",
-        );
+             ORDER BY p.id ASC";
+
+        if ($page !== null) {
+            $sql .= " LIMIT 6 OFFSET " . (($page - 1) * 6);
+        }
+
+        $statement = $this->database->query($sql);
 
         $products = [];
         foreach ($statement->fetchAll() as $product) {

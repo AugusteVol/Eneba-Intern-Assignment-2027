@@ -1,6 +1,5 @@
 import { Header } from "./components/Header";
 import { BannerCarousel } from "./components/BannerCarousel";
-import { CategoryRail } from "./components/CategoryRail";
 import { ProductSection } from "./components/ProductSection";
 import { useEffect, useState } from "react";
 import { ProductDetailPage } from "./pages/ProductDetailPage";
@@ -14,8 +13,6 @@ import { PaymentPage } from "./pages/PaymentPage";
 import { KeyPage } from "./pages/KeyPage";
 import { OrderHistory } from "./pages/OrderHistory";
 import { AllGamesPage } from "./pages/AllGamesPage";
-//import { GiftCardSection } from "./components/GiftCardSection";
-//<GiftCardSection section={{ id: "gift-cards", title: "Gift cards", type: "gift-cards", items: [] }} loading={false} />
 
 export default function App() {
   const getRoute = (): {
@@ -131,7 +128,6 @@ export default function App() {
         {route.page === "home" ? (
           <>
             <BannerCarousel />
-            <CategoryRail categories={[]} loading={false} />
             <div className="content-section page-section-heading">
               <h1>Most popular products</h1>
             </div>
